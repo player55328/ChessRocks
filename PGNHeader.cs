@@ -16,6 +16,8 @@ namespace ns_PGNHeader
     public string blackPlayer;
     public string timeStamp;
 
+    protected string tmp;
+
     public PGNHeader(string TAGsIn)
     {
       InitializeComponent();
@@ -88,6 +90,14 @@ namespace ns_PGNHeader
         {
           //comment
           comments.Text += (line + "\r\n");
+        }
+        else
+        {
+          //comment
+          tmp = line.Replace("}{", " : ");
+          tmp = tmp.Replace("{", null);
+          tmp = tmp.Replace("}", null);
+          comments.Text += ("{" + tmp.Trim() + "}\r\n");
         }
       }
     }
@@ -204,7 +214,7 @@ namespace ns_PGNHeader
       {
         if (FEN.Text.Length == 0)
         {
-          MessageBox.Show("'FEN' is a required field when the 'SetUp' field s set to 1 ...");
+          MessageBox.Show("'FEN' is a required field when the 'SetUp' field is set to 1 ...");
           return;
         }
         else
@@ -228,7 +238,18 @@ namespace ns_PGNHeader
 
       newTags += unknownTags.Text;
 
-      newTags += comments.Text;
+      string[] separator = new string[] { "\r\n" };
+      string tmp;
+
+      foreach (string line in comments.Text.Split(separator, StringSplitOptions.None))
+      {
+        tmp = line.Replace("\n", null);
+        tmp = tmp.Replace("\r", null);
+        tmp = tmp.Replace("}{", " : ");
+        tmp = tmp.Replace("{", null);
+        tmp = tmp.Replace("}", null);
+        if (tmp.Length > 0) newTags += ("{" + tmp.Trim() + "}\r\n");
+      }
 
       tags = newTags.Trim();
 

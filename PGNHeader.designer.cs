@@ -135,7 +135,7 @@
       // label1
       // 
       this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(3, 14);
+      this.label1.Location = new System.Drawing.Point(3, 9);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(77, 13);
       this.label1.TabIndex = 0;
@@ -144,7 +144,7 @@
       // label2
       // 
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(202, 35);
+      this.label2.Location = new System.Drawing.Point(202, 30);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(35, 13);
       this.label2.TabIndex = 1;
@@ -153,7 +153,7 @@
       // label3
       // 
       this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(202, 60);
+      this.label3.Location = new System.Drawing.Point(202, 55);
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(25, 13);
       this.label3.TabIndex = 2;
@@ -162,7 +162,7 @@
       // label4
       // 
       this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(202, 85);
+      this.label4.Location = new System.Drawing.Point(202, 80);
       this.label4.Name = "label4";
       this.label4.Size = new System.Drawing.Size(30, 13);
       this.label4.TabIndex = 3;
@@ -171,7 +171,7 @@
       // label5
       // 
       this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(202, 110);
+      this.label5.Location = new System.Drawing.Point(202, 105);
       this.label5.Name = "label5";
       this.label5.Size = new System.Drawing.Size(39, 13);
       this.label5.TabIndex = 4;
@@ -180,7 +180,7 @@
       // label6
       // 
       this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(202, 135);
+      this.label6.Location = new System.Drawing.Point(202, 130);
       this.label6.Name = "label6";
       this.label6.Size = new System.Drawing.Size(35, 13);
       this.label6.TabIndex = 5;
@@ -189,7 +189,7 @@
       // label7
       // 
       this.label7.AutoSize = true;
-      this.label7.Location = new System.Drawing.Point(202, 160);
+      this.label7.Location = new System.Drawing.Point(202, 155);
       this.label7.Name = "label7";
       this.label7.Size = new System.Drawing.Size(34, 13);
       this.label7.TabIndex = 6;
@@ -198,7 +198,7 @@
       // label8
       // 
       this.label8.AutoSize = true;
-      this.label8.Location = new System.Drawing.Point(202, 185);
+      this.label8.Location = new System.Drawing.Point(202, 180);
       this.label8.Name = "label8";
       this.label8.Size = new System.Drawing.Size(37, 13);
       this.label8.TabIndex = 7;
@@ -206,7 +206,7 @@
       // 
       // Event
       // 
-      this.Event.Location = new System.Drawing.Point(3, 33);
+      this.Event.Location = new System.Drawing.Point(3, 28);
       this.Event.Name = "Event";
       this.Event.Size = new System.Drawing.Size(193, 20);
       this.Event.TabIndex = 0;
@@ -216,7 +216,7 @@
       // 
       // Sitee
       // 
-      this.Sitee.Location = new System.Drawing.Point(3, 57);
+      this.Sitee.Location = new System.Drawing.Point(3, 52);
       this.Sitee.Name = "Sitee";
       this.Sitee.Size = new System.Drawing.Size(193, 20);
       this.Sitee.TabIndex = 1;
@@ -226,7 +226,7 @@
       // 
       // Date
       // 
-      this.Date.Location = new System.Drawing.Point(3, 82);
+      this.Date.Location = new System.Drawing.Point(3, 77);
       this.Date.Name = "Date";
       this.Date.Size = new System.Drawing.Size(193, 20);
       this.Date.TabIndex = 2;
@@ -236,7 +236,7 @@
       // 
       // Round
       // 
-      this.Round.Location = new System.Drawing.Point(3, 107);
+      this.Round.Location = new System.Drawing.Point(3, 102);
       this.Round.Name = "Round";
       this.Round.Size = new System.Drawing.Size(193, 20);
       this.Round.TabIndex = 3;
@@ -246,7 +246,7 @@
       // 
       // White
       // 
-      this.White.Location = new System.Drawing.Point(3, 132);
+      this.White.Location = new System.Drawing.Point(3, 127);
       this.White.Name = "White";
       this.White.Size = new System.Drawing.Size(193, 20);
       this.White.TabIndex = 4;
@@ -255,7 +255,7 @@
       // 
       // Black
       // 
-      this.Black.Location = new System.Drawing.Point(3, 157);
+      this.Black.Location = new System.Drawing.Point(3, 152);
       this.Black.Name = "Black";
       this.Black.Size = new System.Drawing.Size(193, 20);
       this.Black.TabIndex = 5;
@@ -264,7 +264,7 @@
       // 
       // Result
       // 
-      this.Result.Location = new System.Drawing.Point(3, 182);
+      this.Result.Location = new System.Drawing.Point(3, 177);
       this.Result.Name = "Result";
       this.Result.ReadOnly = true;
       this.Result.Size = new System.Drawing.Size(193, 20);
@@ -277,7 +277,7 @@
       // label9
       // 
       this.label9.AutoSize = true;
-      this.label9.Location = new System.Drawing.Point(202, 496);
+      this.label9.Location = new System.Drawing.Point(202, 491);
       this.label9.Name = "label9";
       this.label9.Size = new System.Drawing.Size(58, 13);
       this.label9.TabIndex = 34;
@@ -286,7 +286,7 @@
       // label10
       // 
       this.label10.AutoSize = true;
-      this.label10.Location = new System.Drawing.Point(202, 521);
+      this.label10.Location = new System.Drawing.Point(202, 516);
       this.label10.Name = "label10";
       this.label10.Size = new System.Drawing.Size(74, 13);
       this.label10.TabIndex = 35;
@@ -295,7 +295,7 @@
       // label11
       // 
       this.label11.AutoSize = true;
-      this.label11.Location = new System.Drawing.Point(202, 546);
+      this.label11.Location = new System.Drawing.Point(202, 541);
       this.label11.Name = "label11";
       this.label11.Size = new System.Drawing.Size(43, 13);
       this.label11.TabIndex = 36;
@@ -304,7 +304,7 @@
       // label12
       // 
       this.label12.AutoSize = true;
-      this.label12.Location = new System.Drawing.Point(202, 571);
+      this.label12.Location = new System.Drawing.Point(202, 566);
       this.label12.Name = "label12";
       this.label12.Size = new System.Drawing.Size(35, 13);
       this.label12.TabIndex = 37;
@@ -313,7 +313,7 @@
       // label13
       // 
       this.label13.AutoSize = true;
-      this.label13.Location = new System.Drawing.Point(202, 596);
+      this.label13.Location = new System.Drawing.Point(202, 591);
       this.label13.Name = "label13";
       this.label13.Size = new System.Drawing.Size(35, 13);
       this.label13.TabIndex = 38;
@@ -322,7 +322,7 @@
       // label14
       // 
       this.label14.AutoSize = true;
-      this.label14.Location = new System.Drawing.Point(202, 228);
+      this.label14.Location = new System.Drawing.Point(202, 223);
       this.label14.Name = "label14";
       this.label14.Size = new System.Drawing.Size(55, 13);
       this.label14.TabIndex = 39;
@@ -331,7 +331,7 @@
       // label15
       // 
       this.label15.AutoSize = true;
-      this.label15.Location = new System.Drawing.Point(202, 253);
+      this.label15.Location = new System.Drawing.Point(202, 248);
       this.label15.Name = "label15";
       this.label15.Size = new System.Drawing.Size(54, 13);
       this.label15.TabIndex = 40;
@@ -340,7 +340,7 @@
       // label16
       // 
       this.label16.AutoSize = true;
-      this.label16.Location = new System.Drawing.Point(202, 278);
+      this.label16.Location = new System.Drawing.Point(202, 273);
       this.label16.Name = "label16";
       this.label16.Size = new System.Drawing.Size(50, 13);
       this.label16.TabIndex = 41;
@@ -349,7 +349,7 @@
       // label17
       // 
       this.label17.AutoSize = true;
-      this.label17.Location = new System.Drawing.Point(202, 303);
+      this.label17.Location = new System.Drawing.Point(202, 298);
       this.label17.Name = "label17";
       this.label17.Size = new System.Drawing.Size(49, 13);
       this.label17.TabIndex = 42;
@@ -358,7 +358,7 @@
       // label18
       // 
       this.label18.AutoSize = true;
-      this.label18.Location = new System.Drawing.Point(202, 328);
+      this.label18.Location = new System.Drawing.Point(202, 323);
       this.label18.Name = "label18";
       this.label18.Size = new System.Drawing.Size(63, 13);
       this.label18.TabIndex = 43;
@@ -367,7 +367,7 @@
       // label19
       // 
       this.label19.AutoSize = true;
-      this.label19.Location = new System.Drawing.Point(201, 353);
+      this.label19.Location = new System.Drawing.Point(201, 348);
       this.label19.Name = "label19";
       this.label19.Size = new System.Drawing.Size(62, 13);
       this.label19.TabIndex = 44;
@@ -376,7 +376,7 @@
       // label20
       // 
       this.label20.AutoSize = true;
-      this.label20.Location = new System.Drawing.Point(202, 378);
+      this.label20.Location = new System.Drawing.Point(202, 373);
       this.label20.Name = "label20";
       this.label20.Size = new System.Drawing.Size(50, 13);
       this.label20.TabIndex = 45;
@@ -385,7 +385,7 @@
       // label21
       // 
       this.label21.AutoSize = true;
-      this.label21.Location = new System.Drawing.Point(202, 403);
+      this.label21.Location = new System.Drawing.Point(202, 398);
       this.label21.Name = "label21";
       this.label21.Size = new System.Drawing.Size(49, 13);
       this.label21.TabIndex = 46;
@@ -394,7 +394,7 @@
       // label22
       // 
       this.label22.AutoSize = true;
-      this.label22.Location = new System.Drawing.Point(202, 428);
+      this.label22.Location = new System.Drawing.Point(202, 423);
       this.label22.Name = "label22";
       this.label22.Size = new System.Drawing.Size(59, 13);
       this.label22.TabIndex = 47;
@@ -403,7 +403,7 @@
       // label23
       // 
       this.label23.AutoSize = true;
-      this.label23.Location = new System.Drawing.Point(202, 453);
+      this.label23.Location = new System.Drawing.Point(202, 448);
       this.label23.Name = "label23";
       this.label23.Size = new System.Drawing.Size(58, 13);
       this.label23.TabIndex = 48;
@@ -411,72 +411,72 @@
       // 
       // WhiteTitle
       // 
-      this.WhiteTitle.Location = new System.Drawing.Point(3, 225);
+      this.WhiteTitle.Location = new System.Drawing.Point(3, 220);
       this.WhiteTitle.Name = "WhiteTitle";
       this.WhiteTitle.Size = new System.Drawing.Size(193, 20);
       this.WhiteTitle.TabIndex = 7;
       this.WhiteTitle.Tag = "WhiteTitle";
       this.toolTip1.SetToolTip(this.WhiteTitle, "These use string values such as \"FM\", \"IM\", and \"GM\" these tags are used only for" +
-              " the standard abbreviations for FIDE titles. A value of \"-\" is used for an untit" +
-              "led player. ");
+        " the standard abbreviations for FIDE titles. A value of \"-\" is used for an untit" +
+        "led player. ");
       // 
       // BlackTitle
       // 
-      this.BlackTitle.Location = new System.Drawing.Point(3, 250);
+      this.BlackTitle.Location = new System.Drawing.Point(3, 245);
       this.BlackTitle.Name = "BlackTitle";
       this.BlackTitle.Size = new System.Drawing.Size(193, 20);
       this.BlackTitle.TabIndex = 8;
       this.BlackTitle.Tag = "BlackTitle";
       this.toolTip1.SetToolTip(this.BlackTitle, "These use string values such as \"FM\", \"IM\", and \"GM\" these tags are used only for" +
-              " the standard abbreviations for FIDE titles. A value of \"-\" is used for an untit" +
-              "led player. ");
+        " the standard abbreviations for FIDE titles. A value of \"-\" is used for an untit" +
+        "led player. ");
       // 
       // WhiteELO
       // 
-      this.WhiteELO.Location = new System.Drawing.Point(3, 275);
+      this.WhiteELO.Location = new System.Drawing.Point(3, 270);
       this.WhiteELO.Name = "WhiteELO";
       this.WhiteELO.Size = new System.Drawing.Size(193, 20);
       this.WhiteELO.TabIndex = 9;
       this.WhiteELO.Tag = "WhiteElo";
       this.toolTip1.SetToolTip(this.WhiteELO, "These tags use integer values; these are used for FIDE Elo ratings. A value of \"-" +
-              "\" is used for an unrated player. ");
+        "\" is used for an unrated player. ");
       // 
       // BlackELO
       // 
-      this.BlackELO.Location = new System.Drawing.Point(3, 300);
+      this.BlackELO.Location = new System.Drawing.Point(3, 295);
       this.BlackELO.Name = "BlackELO";
       this.BlackELO.Size = new System.Drawing.Size(193, 20);
       this.BlackELO.TabIndex = 10;
       this.BlackELO.Tag = "BlackElo";
       this.toolTip1.SetToolTip(this.BlackELO, "These tags use integer values; these are used for FIDE Elo ratings. A value of \"-" +
-              "\" is used for an unrated player. ");
+        "\" is used for an unrated player. ");
       // 
       // WhiteUSCF
       // 
-      this.WhiteUSCF.Location = new System.Drawing.Point(3, 325);
+      this.WhiteUSCF.Location = new System.Drawing.Point(3, 320);
       this.WhiteUSCF.Name = "WhiteUSCF";
       this.WhiteUSCF.Size = new System.Drawing.Size(193, 20);
       this.WhiteUSCF.TabIndex = 11;
       this.WhiteUSCF.Tag = "WhiteUSCF";
       this.toolTip1.SetToolTip(this.WhiteUSCF, "These tags use integer values; these are used for USCF (United States Chess Feder" +
-              "ation) ratings. Similar tag names can be constructed for other rating agencies. " +
-              "");
+        "ation) ratings. Similar tag names can be constructed for other rating agencies. " +
+        "");
       // 
       // BlackUSCF
       // 
-      this.BlackUSCF.Location = new System.Drawing.Point(3, 350);
+      this.BlackUSCF.Location = new System.Drawing.Point(3, 345);
       this.BlackUSCF.Name = "BlackUSCF";
       this.BlackUSCF.Size = new System.Drawing.Size(193, 20);
       this.BlackUSCF.TabIndex = 12;
       this.BlackUSCF.Tag = "BlackUSCF";
       this.toolTip1.SetToolTip(this.BlackUSCF, "These tags use integer values; these are used for USCF (United States Chess Feder" +
-              "ation) ratings. Similar tag names can be constructed for other rating agencies. " +
-              "");
+        "ation) ratings. Similar tag names can be constructed for other rating agencies. " +
+        "");
       // 
       // label24
       // 
       this.label24.AutoSize = true;
-      this.label24.Location = new System.Drawing.Point(3, 207);
+      this.label24.Location = new System.Drawing.Point(3, 202);
       this.label24.Name = "label24";
       this.label24.Size = new System.Drawing.Size(63, 13);
       this.label24.TabIndex = 55;
@@ -485,7 +485,7 @@
       // label25
       // 
       this.label25.AutoSize = true;
-      this.label25.Location = new System.Drawing.Point(3, 475);
+      this.label25.Location = new System.Drawing.Point(3, 470);
       this.label25.Name = "label25";
       this.label25.Size = new System.Drawing.Size(62, 13);
       this.label25.TabIndex = 56;
@@ -493,27 +493,27 @@
       // 
       // WhiteNA
       // 
-      this.WhiteNA.Location = new System.Drawing.Point(3, 375);
+      this.WhiteNA.Location = new System.Drawing.Point(3, 370);
       this.WhiteNA.Name = "WhiteNA";
       this.WhiteNA.Size = new System.Drawing.Size(193, 20);
       this.WhiteNA.TabIndex = 13;
       this.WhiteNA.Tag = "WhiteNA";
       this.toolTip1.SetToolTip(this.WhiteNA, "These tags use string values; these are the e-mail or network addresses of the pl" +
-              "ayers. A value of \"-\" is used for a player without an electronic address. ");
+        "ayers. A value of \"-\" is used for a player without an electronic address. ");
       // 
       // BlackNA
       // 
-      this.BlackNA.Location = new System.Drawing.Point(3, 400);
+      this.BlackNA.Location = new System.Drawing.Point(3, 395);
       this.BlackNA.Name = "BlackNA";
       this.BlackNA.Size = new System.Drawing.Size(193, 20);
       this.BlackNA.TabIndex = 14;
       this.BlackNA.Tag = "BlackNA";
       this.toolTip1.SetToolTip(this.BlackNA, "These tags use string values; these are the e-mail or network addresses of the pl" +
-              "ayers. A value of \"-\" is used for a player without an electronic address. ");
+        "ayers. A value of \"-\" is used for a player without an electronic address. ");
       // 
       // Time
       // 
-      this.Time.Location = new System.Drawing.Point(294, 175);
+      this.Time.Location = new System.Drawing.Point(282, 170);
       this.Time.Name = "Time";
       this.Time.Size = new System.Drawing.Size(193, 20);
       this.Time.TabIndex = 29;
@@ -522,17 +522,17 @@
       // 
       // EventDate
       // 
-      this.EventDate.Location = new System.Drawing.Point(3, 493);
+      this.EventDate.Location = new System.Drawing.Point(3, 488);
       this.EventDate.Name = "EventDate";
       this.EventDate.Size = new System.Drawing.Size(193, 20);
       this.EventDate.TabIndex = 17;
       this.EventDate.Tag = "EventDate";
       this.toolTip1.SetToolTip(this.EventDate, "This uses a date value, similar to the Date tag field, that gives the starting da" +
-              "te of the Event. ");
+        "te of the Event. ");
       // 
       // EventSponsor
       // 
-      this.EventSponsor.Location = new System.Drawing.Point(3, 518);
+      this.EventSponsor.Location = new System.Drawing.Point(3, 513);
       this.EventSponsor.Name = "EventSponsor";
       this.EventSponsor.Size = new System.Drawing.Size(193, 20);
       this.EventSponsor.TabIndex = 18;
@@ -541,67 +541,67 @@
       // 
       // Section
       // 
-      this.Section.Location = new System.Drawing.Point(3, 543);
+      this.Section.Location = new System.Drawing.Point(3, 538);
       this.Section.Name = "Section";
       this.Section.Size = new System.Drawing.Size(193, 20);
       this.Section.TabIndex = 19;
       this.Section.Tag = "Section";
       this.toolTip1.SetToolTip(this.Section, "This uses a string; this is used for the playing section of a tournament (e.g., \"" +
-              "Open\" or \"Reserve\"). ");
+        "Open\" or \"Reserve\"). ");
       // 
       // Stage
       // 
-      this.Stage.Location = new System.Drawing.Point(3, 568);
+      this.Stage.Location = new System.Drawing.Point(3, 563);
       this.Stage.Name = "Stage";
       this.Stage.Size = new System.Drawing.Size(193, 20);
       this.Stage.TabIndex = 20;
       this.Stage.Tag = "Stage";
       this.toolTip1.SetToolTip(this.Stage, "This uses a string; this is used for the stage of a multistage event (e.g., \"Prel" +
-              "iminary\" or \"Semifinal\"). ");
+        "iminary\" or \"Semifinal\"). ");
       // 
       // Board
       // 
-      this.Board.Location = new System.Drawing.Point(3, 593);
+      this.Board.Location = new System.Drawing.Point(3, 588);
       this.Board.Name = "Board";
       this.Board.Size = new System.Drawing.Size(193, 20);
       this.Board.TabIndex = 21;
       this.Board.Tag = "Board";
       this.toolTip1.SetToolTip(this.Board, "This uses an integer; this identifies the board number in a team event and also i" +
-              "n a simultaneous exhibition. ");
+        "n a simultaneous exhibition. ");
       // 
       // custom3
       // 
-      this.custom3.Location = new System.Drawing.Point(294, 519);
+      this.custom3.Location = new System.Drawing.Point(282, 514);
       this.custom3.Name = "custom3";
       this.custom3.Size = new System.Drawing.Size(193, 20);
       this.custom3.TabIndex = 44;
-      this.custom3.Tag = "FENPlus";
+      this.custom3.Tag = "WhiteAnalysisTime";
       this.toolTip1.SetToolTip(this.custom3, "You must be consistent in how this is written, avoid punctuation letters if possi" +
-              "ble.");
+        "ble.");
       // 
       // custom2
       // 
-      this.custom2.Location = new System.Drawing.Point(294, 494);
+      this.custom2.Location = new System.Drawing.Point(282, 489);
       this.custom2.Name = "custom2";
       this.custom2.Size = new System.Drawing.Size(193, 20);
       this.custom2.TabIndex = 42;
       this.custom2.Tag = "BlackTime";
       this.toolTip1.SetToolTip(this.custom2, "You must be consistent in how this is written, avoid punctuation letters if possi" +
-              "ble.");
+        "ble.");
       // 
       // custom1
       // 
-      this.custom1.Location = new System.Drawing.Point(294, 469);
+      this.custom1.Location = new System.Drawing.Point(282, 464);
       this.custom1.Name = "custom1";
       this.custom1.Size = new System.Drawing.Size(193, 20);
       this.custom1.TabIndex = 40;
       this.custom1.Tag = "WhiteTime";
       this.toolTip1.SetToolTip(this.custom1, "You must be consistent in how this is written, avoid punctuation letters if possi" +
-              "ble.");
+        "ble.");
       // 
       // Mode
       // 
-      this.Mode.Location = new System.Drawing.Point(294, 396);
+      this.Mode.Location = new System.Drawing.Point(282, 391);
       this.Mode.Name = "Mode";
       this.Mode.Size = new System.Drawing.Size(193, 20);
       this.Mode.TabIndex = 37;
@@ -610,17 +610,17 @@
       // 
       // Annotator
       // 
-      this.Annotator.Location = new System.Drawing.Point(294, 371);
+      this.Annotator.Location = new System.Drawing.Point(282, 366);
       this.Annotator.Name = "Annotator";
       this.Annotator.Size = new System.Drawing.Size(193, 20);
       this.Annotator.TabIndex = 36;
       this.Annotator.Tag = "Annotator";
       this.toolTip1.SetToolTip(this.Annotator, "This tag uses a name or names in the format of the player name tags; this identif" +
-              "ies the annotator or annotators of the game. ");
+        "ies the annotator or annotators of the game. ");
       // 
       // Termination
       // 
-      this.Termination.Location = new System.Drawing.Point(294, 346);
+      this.Termination.Location = new System.Drawing.Point(282, 341);
       this.Termination.Name = "Termination";
       this.Termination.ReadOnly = true;
       this.Termination.Size = new System.Drawing.Size(193, 20);
@@ -630,7 +630,7 @@
       // 
       // FEN
       // 
-      this.FEN.Location = new System.Drawing.Point(294, 321);
+      this.FEN.Location = new System.Drawing.Point(282, 316);
       this.FEN.Name = "FEN";
       this.FEN.ReadOnly = true;
       this.FEN.Size = new System.Drawing.Size(193, 20);
@@ -640,37 +640,37 @@
       // 
       // TimeControl
       // 
-      this.TimeControl.Location = new System.Drawing.Point(294, 250);
+      this.TimeControl.Location = new System.Drawing.Point(282, 245);
       this.TimeControl.Name = "TimeControl";
       this.TimeControl.Size = new System.Drawing.Size(193, 20);
       this.TimeControl.TabIndex = 32;
       this.TimeControl.Tag = "TimeControl";
       this.toolTip1.SetToolTip(this.TimeControl, "The first kind is a single question mark (\"?\") which means that the time control " +
-              "mode is unknown. When used, it is usually the only descriptor present. ");
+        "mode is unknown. When used, it is usually the only descriptor present. ");
       // 
       // UTCDate
       // 
-      this.UTCDate.Location = new System.Drawing.Point(294, 225);
+      this.UTCDate.Location = new System.Drawing.Point(282, 220);
       this.UTCDate.Name = "UTCDate";
       this.UTCDate.Size = new System.Drawing.Size(193, 20);
       this.UTCDate.TabIndex = 31;
       this.UTCDate.Tag = "UTCDate";
       this.toolTip1.SetToolTip(this.UTCDate, "This tag is similar to the Date tag except that the date is given according to th" +
-              "e Universal Coordinated Time standard. ");
+        "e Universal Coordinated Time standard. ");
       // 
       // UTCTime
       // 
-      this.UTCTime.Location = new System.Drawing.Point(294, 200);
+      this.UTCTime.Location = new System.Drawing.Point(282, 195);
       this.UTCTime.Name = "UTCTime";
       this.UTCTime.Size = new System.Drawing.Size(193, 20);
       this.UTCTime.TabIndex = 30;
       this.UTCTime.Tag = "UTCTime";
       this.toolTip1.SetToolTip(this.UTCTime, "his tag is similar to the Time tag except that the time is given according to the" +
-              " Universal Coordinated Time standard. ");
+        " Universal Coordinated Time standard. ");
       // 
       // NIC
       // 
-      this.NIC.Location = new System.Drawing.Point(294, 131);
+      this.NIC.Location = new System.Drawing.Point(282, 126);
       this.NIC.Name = "NIC";
       this.NIC.Size = new System.Drawing.Size(193, 20);
       this.NIC.TabIndex = 26;
@@ -679,7 +679,7 @@
       // 
       // ECO
       // 
-      this.ECO.Location = new System.Drawing.Point(294, 106);
+      this.ECO.Location = new System.Drawing.Point(282, 101);
       this.ECO.Name = "ECO";
       this.ECO.Size = new System.Drawing.Size(193, 20);
       this.ECO.TabIndex = 25;
@@ -688,7 +688,7 @@
       // 
       // SubVariation
       // 
-      this.SubVariation.Location = new System.Drawing.Point(294, 81);
+      this.SubVariation.Location = new System.Drawing.Point(282, 76);
       this.SubVariation.Name = "SubVariation";
       this.SubVariation.Size = new System.Drawing.Size(193, 20);
       this.SubVariation.TabIndex = 24;
@@ -697,7 +697,7 @@
       // 
       // Variation
       // 
-      this.Variation.Location = new System.Drawing.Point(294, 56);
+      this.Variation.Location = new System.Drawing.Point(282, 51);
       this.Variation.Name = "Variation";
       this.Variation.Size = new System.Drawing.Size(193, 20);
       this.Variation.TabIndex = 23;
@@ -706,7 +706,7 @@
       // 
       // Opening
       // 
-      this.Opening.Location = new System.Drawing.Point(294, 32);
+      this.Opening.Location = new System.Drawing.Point(282, 27);
       this.Opening.Name = "Opening";
       this.Opening.Size = new System.Drawing.Size(193, 20);
       this.Opening.TabIndex = 22;
@@ -719,7 +719,7 @@
       this.SetUp.Items.AddRange(new object[] {
             "0",
             "1"});
-      this.SetUp.Location = new System.Drawing.Point(294, 295);
+      this.SetUp.Location = new System.Drawing.Point(282, 290);
       this.SetUp.Name = "SetUp";
       this.SetUp.Size = new System.Drawing.Size(193, 21);
       this.SetUp.TabIndex = 33;
@@ -729,69 +729,70 @@
       // 
       // custom4
       // 
-      this.custom4.Location = new System.Drawing.Point(294, 544);
+      this.custom4.Location = new System.Drawing.Point(282, 539);
       this.custom4.Name = "custom4";
       this.custom4.Size = new System.Drawing.Size(193, 20);
       this.custom4.TabIndex = 46;
-      this.custom4.Tag = "AnalysisTime";
+      this.custom4.Tag = "BlackAnalysisTime";
       this.toolTip1.SetToolTip(this.custom4, "You must be consistent in how this is written, avoid punctuation letters if possi" +
-              "ble.");
+        "ble.");
       // 
       // PlyCount
       // 
-      this.PlyCount.Location = new System.Drawing.Point(294, 421);
+      this.PlyCount.Location = new System.Drawing.Point(282, 416);
       this.PlyCount.Name = "PlyCount";
       this.PlyCount.Size = new System.Drawing.Size(193, 20);
       this.PlyCount.TabIndex = 38;
       this.PlyCount.Tag = "PlyCount";
       this.toolTip1.SetToolTip(this.PlyCount, "This tag takes a single integer that gives the number of ply (moves) in the game." +
-              " ");
+        " ");
       // 
       // customTag1
       // 
       this.customTag1.BackColor = System.Drawing.Color.SlateBlue;
-      this.customTag1.Location = new System.Drawing.Point(491, 469);
+      this.customTag1.Location = new System.Drawing.Point(479, 464);
       this.customTag1.Name = "customTag1";
       this.customTag1.ReadOnly = true;
-      this.customTag1.Size = new System.Drawing.Size(71, 20);
+      this.customTag1.Size = new System.Drawing.Size(106, 20);
       this.customTag1.TabIndex = 39;
       this.customTag1.Text = "WhiteTime";
       this.toolTip1.SetToolTip(this.customTag1, "No Spaces Allowed, capitalize first letter of each word or all abbreviation lette" +
-              "rs.  Must be unique from any other TAG name.");
+        "rs.  Must be unique from any other TAG name.");
       // 
       // customTag2
       // 
       this.customTag2.BackColor = System.Drawing.Color.SlateBlue;
-      this.customTag2.Location = new System.Drawing.Point(491, 494);
+      this.customTag2.Location = new System.Drawing.Point(479, 489);
       this.customTag2.Name = "customTag2";
       this.customTag2.ReadOnly = true;
-      this.customTag2.Size = new System.Drawing.Size(71, 20);
+      this.customTag2.Size = new System.Drawing.Size(106, 20);
       this.customTag2.TabIndex = 41;
       this.customTag2.Text = "BlackTime";
       this.toolTip1.SetToolTip(this.customTag2, "No Spaces Allowed, capitalize first letter of each word or all abbreviation lette" +
-              "rs.  Must be unique from any other TAG name.");
+        "rs.  Must be unique from any other TAG name.");
       // 
       // customTag3
       // 
       this.customTag3.BackColor = System.Drawing.Color.SlateBlue;
-      this.customTag3.Location = new System.Drawing.Point(491, 519);
+      this.customTag3.Location = new System.Drawing.Point(479, 514);
       this.customTag3.Name = "customTag3";
       this.customTag3.ReadOnly = true;
-      this.customTag3.Size = new System.Drawing.Size(71, 20);
+      this.customTag3.Size = new System.Drawing.Size(106, 20);
       this.customTag3.TabIndex = 43;
-      this.customTag3.Text = "AnalysisTime";
+      this.customTag3.Text = "WhiteAnalysisTime";
       this.toolTip1.SetToolTip(this.customTag3, "No Spaces Allowed, capitalize first letter of each word or all abbreviation lette" +
-              "rs.  Must be unique from any other TAG name.");
+        "rs.  Must be unique from any other TAG name.");
       // 
       // customTag4
       // 
       this.customTag4.BackColor = System.Drawing.Color.SlateBlue;
-      this.customTag4.Location = new System.Drawing.Point(491, 544);
+      this.customTag4.Location = new System.Drawing.Point(479, 539);
       this.customTag4.Name = "customTag4";
-      this.customTag4.Size = new System.Drawing.Size(71, 20);
+      this.customTag4.Size = new System.Drawing.Size(106, 20);
       this.customTag4.TabIndex = 45;
+      this.customTag4.Text = "BlackAnalysisTime";
       this.toolTip1.SetToolTip(this.customTag4, "No Spaces Allowed, capitalize first letter of each word or all abbreviation lette" +
-              "rs.  Must be unique from any other TAG name.");
+        "rs.  Must be unique from any other TAG name.");
       // 
       // WhiteType
       // 
@@ -799,14 +800,14 @@
       this.WhiteType.Items.AddRange(new object[] {
             "human",
             "computer"});
-      this.WhiteType.Location = new System.Drawing.Point(3, 425);
+      this.WhiteType.Location = new System.Drawing.Point(3, 420);
       this.WhiteType.Name = "WhiteType";
       this.WhiteType.Size = new System.Drawing.Size(193, 21);
       this.WhiteType.TabIndex = 133;
       this.WhiteType.Tag = "WhiteType";
       this.toolTip1.SetToolTip(this.WhiteType, "These tags use string values; these describe the player types. The value \"human\" " +
-              "should be used for a person while the value \"program\" should be used for algorit" +
-              "hmic (computer) players. ");
+        "should be used for a person while the value \"program\" should be used for algorit" +
+        "hmic (computer) players. ");
       // 
       // BlackType
       // 
@@ -814,41 +815,41 @@
       this.BlackType.Items.AddRange(new object[] {
             "human",
             "computer"});
-      this.BlackType.Location = new System.Drawing.Point(3, 450);
+      this.BlackType.Location = new System.Drawing.Point(3, 445);
       this.BlackType.Name = "BlackType";
       this.BlackType.Size = new System.Drawing.Size(193, 21);
       this.BlackType.TabIndex = 134;
       this.BlackType.Tag = "BlackType";
       this.toolTip1.SetToolTip(this.BlackType, "These tags use string values; these describe the player types. The value \"human\" " +
-              "should be used for a person while the value \"program\" should be used for algorit" +
-              "hmic (computer) players. ");
+        "should be used for a person while the value \"program\" should be used for algorit" +
+        "hmic (computer) players. ");
       // 
       // customTag5
       // 
       this.customTag5.BackColor = System.Drawing.Color.SlateBlue;
-      this.customTag5.Location = new System.Drawing.Point(491, 568);
+      this.customTag5.Location = new System.Drawing.Point(479, 563);
       this.customTag5.Name = "customTag5";
-      this.customTag5.Size = new System.Drawing.Size(71, 20);
+      this.customTag5.Size = new System.Drawing.Size(106, 20);
       this.customTag5.TabIndex = 135;
       this.toolTip1.SetToolTip(this.customTag5, "No Spaces Allowed, capitalize first letter of each word or all abbreviation lette" +
-              "rs.  Must be unique from any other TAG name.");
+        "rs.  Must be unique from any other TAG name.");
       this.customTag5.Visible = false;
       // 
       // customTag6
       // 
       this.customTag6.BackColor = System.Drawing.Color.SlateBlue;
-      this.customTag6.Location = new System.Drawing.Point(491, 593);
+      this.customTag6.Location = new System.Drawing.Point(479, 588);
       this.customTag6.Name = "customTag6";
-      this.customTag6.Size = new System.Drawing.Size(71, 20);
+      this.customTag6.Size = new System.Drawing.Size(106, 20);
       this.customTag6.TabIndex = 136;
       this.toolTip1.SetToolTip(this.customTag6, "No Spaces Allowed, capitalize first letter of each word or all abbreviation lette" +
-              "rs.  Must be unique from any other TAG name.");
+        "rs.  Must be unique from any other TAG name.");
       this.customTag6.Visible = false;
       // 
       // label27
       // 
       this.label27.AutoSize = true;
-      this.label27.Location = new System.Drawing.Point(294, 157);
+      this.label27.Location = new System.Drawing.Point(282, 152);
       this.label27.Name = "label27";
       this.label27.Size = new System.Drawing.Size(92, 13);
       this.label27.TabIndex = 102;
@@ -857,7 +858,7 @@
       // label30
       // 
       this.label30.AutoSize = true;
-      this.label30.Location = new System.Drawing.Point(490, 324);
+      this.label30.Location = new System.Drawing.Point(478, 319);
       this.label30.Name = "label30";
       this.label30.Size = new System.Drawing.Size(28, 13);
       this.label30.TabIndex = 93;
@@ -866,7 +867,7 @@
       // label31
       // 
       this.label31.AutoSize = true;
-      this.label31.Location = new System.Drawing.Point(491, 298);
+      this.label31.Location = new System.Drawing.Point(479, 293);
       this.label31.Name = "label31";
       this.label31.Size = new System.Drawing.Size(37, 13);
       this.label31.TabIndex = 92;
@@ -875,7 +876,7 @@
       // label34
       // 
       this.label34.AutoSize = true;
-      this.label34.Location = new System.Drawing.Point(491, 254);
+      this.label34.Location = new System.Drawing.Point(479, 249);
       this.label34.Name = "label34";
       this.label34.Size = new System.Drawing.Size(63, 13);
       this.label34.TabIndex = 89;
@@ -884,7 +885,7 @@
       // label35
       // 
       this.label35.AutoSize = true;
-      this.label35.Location = new System.Drawing.Point(491, 229);
+      this.label35.Location = new System.Drawing.Point(479, 224);
       this.label35.Name = "label35";
       this.label35.Size = new System.Drawing.Size(52, 13);
       this.label35.TabIndex = 88;
@@ -893,7 +894,7 @@
       // label36
       // 
       this.label36.AutoSize = true;
-      this.label36.Location = new System.Drawing.Point(491, 204);
+      this.label36.Location = new System.Drawing.Point(479, 199);
       this.label36.Name = "label36";
       this.label36.Size = new System.Drawing.Size(52, 13);
       this.label36.TabIndex = 87;
@@ -902,7 +903,7 @@
       // label37
       // 
       this.label37.AutoSize = true;
-      this.label37.Location = new System.Drawing.Point(490, 179);
+      this.label37.Location = new System.Drawing.Point(478, 174);
       this.label37.Name = "label37";
       this.label37.Size = new System.Drawing.Size(30, 13);
       this.label37.TabIndex = 86;
@@ -911,7 +912,7 @@
       // label38
       // 
       this.label38.AutoSize = true;
-      this.label38.Location = new System.Drawing.Point(491, 424);
+      this.label38.Location = new System.Drawing.Point(479, 419);
       this.label38.Name = "label38";
       this.label38.Size = new System.Drawing.Size(49, 13);
       this.label38.TabIndex = 85;
@@ -920,7 +921,7 @@
       // label39
       // 
       this.label39.AutoSize = true;
-      this.label39.Location = new System.Drawing.Point(491, 399);
+      this.label39.Location = new System.Drawing.Point(479, 394);
       this.label39.Name = "label39";
       this.label39.Size = new System.Drawing.Size(34, 13);
       this.label39.TabIndex = 84;
@@ -929,7 +930,7 @@
       // label40
       // 
       this.label40.AutoSize = true;
-      this.label40.Location = new System.Drawing.Point(491, 374);
+      this.label40.Location = new System.Drawing.Point(479, 369);
       this.label40.Name = "label40";
       this.label40.Size = new System.Drawing.Size(53, 13);
       this.label40.TabIndex = 83;
@@ -938,7 +939,7 @@
       // label42
       // 
       this.label42.AutoSize = true;
-      this.label42.Location = new System.Drawing.Point(491, 349);
+      this.label42.Location = new System.Drawing.Point(479, 344);
       this.label42.Name = "label42";
       this.label42.Size = new System.Drawing.Size(62, 13);
       this.label42.TabIndex = 81;
@@ -947,7 +948,7 @@
       // label48
       // 
       this.label48.AutoSize = true;
-      this.label48.Location = new System.Drawing.Point(490, 135);
+      this.label48.Location = new System.Drawing.Point(478, 130);
       this.label48.Name = "label48";
       this.label48.Size = new System.Drawing.Size(25, 13);
       this.label48.TabIndex = 68;
@@ -956,7 +957,7 @@
       // label49
       // 
       this.label49.AutoSize = true;
-      this.label49.Location = new System.Drawing.Point(490, 110);
+      this.label49.Location = new System.Drawing.Point(478, 105);
       this.label49.Name = "label49";
       this.label49.Size = new System.Drawing.Size(29, 13);
       this.label49.TabIndex = 67;
@@ -965,7 +966,7 @@
       // label51
       // 
       this.label51.AutoSize = true;
-      this.label51.Location = new System.Drawing.Point(294, 13);
+      this.label51.Location = new System.Drawing.Point(282, 8);
       this.label51.Name = "label51";
       this.label51.Size = new System.Drawing.Size(74, 13);
       this.label51.TabIndex = 116;
@@ -974,7 +975,7 @@
       // label52
       // 
       this.label52.AutoSize = true;
-      this.label52.Location = new System.Drawing.Point(491, 85);
+      this.label52.Location = new System.Drawing.Point(479, 80);
       this.label52.Name = "label52";
       this.label52.Size = new System.Drawing.Size(67, 13);
       this.label52.TabIndex = 115;
@@ -983,7 +984,7 @@
       // label53
       // 
       this.label53.AutoSize = true;
-      this.label53.Location = new System.Drawing.Point(491, 60);
+      this.label53.Location = new System.Drawing.Point(479, 55);
       this.label53.Name = "label53";
       this.label53.Size = new System.Drawing.Size(48, 13);
       this.label53.TabIndex = 114;
@@ -992,7 +993,7 @@
       // label54
       // 
       this.label54.AutoSize = true;
-      this.label54.Location = new System.Drawing.Point(491, 35);
+      this.label54.Location = new System.Drawing.Point(479, 30);
       this.label54.Name = "label54";
       this.label54.Size = new System.Drawing.Size(47, 13);
       this.label54.TabIndex = 113;
@@ -1001,7 +1002,7 @@
       // label32
       // 
       this.label32.AutoSize = true;
-      this.label32.Location = new System.Drawing.Point(294, 275);
+      this.label32.Location = new System.Drawing.Point(282, 270);
       this.label32.Name = "label32";
       this.label32.Size = new System.Drawing.Size(101, 13);
       this.label32.TabIndex = 120;
@@ -1009,7 +1010,7 @@
       // 
       // custom5
       // 
-      this.custom5.Location = new System.Drawing.Point(294, 568);
+      this.custom5.Location = new System.Drawing.Point(282, 563);
       this.custom5.Name = "custom5";
       this.custom5.Size = new System.Drawing.Size(193, 20);
       this.custom5.TabIndex = 27;
@@ -1018,7 +1019,7 @@
       // 
       // custom6
       // 
-      this.custom6.Location = new System.Drawing.Point(294, 593);
+      this.custom6.Location = new System.Drawing.Point(282, 588);
       this.custom6.Name = "custom6";
       this.custom6.Size = new System.Drawing.Size(193, 20);
       this.custom6.TabIndex = 28;
@@ -1028,7 +1029,7 @@
       // label26
       // 
       this.label26.AutoSize = true;
-      this.label26.Location = new System.Drawing.Point(294, 450);
+      this.label26.Location = new System.Drawing.Point(282, 445);
       this.label26.Name = "label26";
       this.label26.Size = new System.Drawing.Size(69, 13);
       this.label26.TabIndex = 126;
@@ -1036,7 +1037,7 @@
       // 
       // done
       // 
-      this.done.Location = new System.Drawing.Point(491, 811);
+      this.done.Location = new System.Drawing.Point(482, 794);
       this.done.Name = "done";
       this.done.Size = new System.Drawing.Size(71, 23);
       this.done.TabIndex = 6;
@@ -1047,7 +1048,7 @@
       // cancel
       // 
       this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.cancel.Location = new System.Drawing.Point(491, 643);
+      this.cancel.Location = new System.Drawing.Point(481, 632);
       this.cancel.Name = "cancel";
       this.cancel.Size = new System.Drawing.Size(71, 23);
       this.cancel.TabIndex = 132;
@@ -1057,7 +1058,7 @@
       // label28
       // 
       this.label28.AutoSize = true;
-      this.label28.Location = new System.Drawing.Point(3, 626);
+      this.label28.Location = new System.Drawing.Point(3, 615);
       this.label28.Name = "label28";
       this.label28.Size = new System.Drawing.Size(80, 13);
       this.label28.TabIndex = 137;
@@ -1066,7 +1067,7 @@
       // label29
       // 
       this.label29.AutoSize = true;
-      this.label29.Location = new System.Drawing.Point(0, 740);
+      this.label29.Location = new System.Drawing.Point(0, 719);
       this.label29.Name = "label29";
       this.label29.Size = new System.Drawing.Size(138, 13);
       this.label29.TabIndex = 138;
@@ -1074,19 +1075,19 @@
       // 
       // unknownTags
       // 
-      this.unknownTags.Location = new System.Drawing.Point(3, 643);
+      this.unknownTags.Location = new System.Drawing.Point(3, 632);
       this.unknownTags.Multiline = true;
       this.unknownTags.Name = "unknownTags";
-      this.unknownTags.Size = new System.Drawing.Size(484, 78);
+      this.unknownTags.Size = new System.Drawing.Size(472, 78);
       this.unknownTags.TabIndex = 139;
       this.unknownTags.WordWrap = false;
       // 
       // comments
       // 
-      this.comments.Location = new System.Drawing.Point(3, 760);
+      this.comments.Location = new System.Drawing.Point(3, 739);
       this.comments.Multiline = true;
       this.comments.Name = "comments";
-      this.comments.Size = new System.Drawing.Size(484, 78);
+      this.comments.Size = new System.Drawing.Size(472, 78);
       this.comments.TabIndex = 140;
       this.comments.WordWrap = false;
       // 
@@ -1094,8 +1095,9 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.AutoScroll = true;
       this.BackColor = System.Drawing.Color.MediumSlateBlue;
-      this.ClientSize = new System.Drawing.Size(565, 846);
+      this.ClientSize = new System.Drawing.Size(597, 824);
       this.Controls.Add(this.comments);
       this.Controls.Add(this.unknownTags);
       this.Controls.Add(this.label29);
@@ -1195,7 +1197,9 @@
       this.Controls.Add(this.label3);
       this.Controls.Add(this.label2);
       this.Controls.Add(this.label1);
+      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Name = "PGNHeader";
+      this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
       this.Text = "PGN Header";
       this.ResumeLayout(false);
       this.PerformLayout();

@@ -28,6 +28,7 @@
     /// </summary>
     private void InitializeComponent()
     {
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AmbiguousSource));
       this.label1 = new System.Windows.Forms.Label();
       this.textBox1 = new System.Windows.Forms.TextBox();
       this.checkBox1 = new System.Windows.Forms.CheckBox();
@@ -48,7 +49,7 @@
       this.label1.Size = new System.Drawing.Size(260, 56);
       this.label1.TabIndex = 0;
       this.label1.Text = "An ambiguous source square for the move listed below exists, select one of the av" +
-          "ailable options...";
+    "ailable options...";
       // 
       // textBox1
       // 
@@ -170,7 +171,9 @@
       this.Controls.Add(this.checkBox1);
       this.Controls.Add(this.textBox1);
       this.Controls.Add(this.label1);
+      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Name = "AmbiguousSource";
+      this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
       this.Text = "Ambiguous Source Square";
       this.ResumeLayout(false);
       this.PerformLayout();

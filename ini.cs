@@ -17,6 +17,8 @@ namespace ns_ini
     public static extern bool WritePrivateProfileString(string lpAppName, string lpKeyName, string lpString, string lpFileName);
     [DllImport("KERNEL32.DLL", EntryPoint = "GetPrivateProfileString")]
     protected internal static extern int GetPrivateProfileString(string lpAppName, string lpKeyName, string lpDefault, StringBuilder lpReturnedString, int nSize, string lpFileName);
+    [DllImport("KERNEL32.DLL", EntryPoint = "GetPrivateProfileSection")]
+    protected internal static extern int GetPrivateProfileSection(string lpAppName, byte[] lpReturnedString, int nSize, string lpFileName);
 
     //*******************************************************************************************************
     public ini(string iniFileName)
@@ -24,8 +26,62 @@ namespace ns_ini
         iniFile = iniFileName;
     }
 
+    //*******************************************************************************
+    //read everything in the section and send it back
+    //
+    public int GetINISectionValues(string pszSection, ArrayList pszBuf)
+    {
+      int nStatus; // number of characters parsed
+      byte[] byteBuffer = new byte[maxStringLength];
+
+      // Use the INI filename specified in the constructor.
+      nStatus = GetPrivateProfileSection(pszSection, byteBuffer, byteBuffer.GetUpperBound(0), iniFile);
+
+      //int BufferIndex = 0;
+      if (nStatus < maxStringLength - 2)
+      {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < nStatus; i++)
+        {
+          if (byteBuffer[i] != 0)
+          {
+            sb.Append((char)byteBuffer[i]);
+          }
+          else
+          {
+            if (sb.Length > 0)
+            {
+              pszBuf.Add(sb.ToString());
+              sb = new StringBuilder();
+            }
+          }
+        }
+      }
+
+      return nStatus;
+    }
+
     //*******************************************************************************************************
     public bool GetINIValue(string pszSection, string pszEntry, ref string pszBuf, string Default)
+    {
+      return GetINIValue(pszSection, pszEntry, ref pszBuf, Default, false);
+      //int Status;
+
+      //Status = GetPrivateProfileString(pszSection, pszEntry, Default, retrunedString, maxStringLength, iniFile);
+      //pszBuf = retrunedString.ToString();
+
+      //// If one or more characters were parsed clean it up
+      //if (Status > 0)
+      //{
+      //  pszBuf = pszBuf.ToUpper();
+      //}
+      ////else --not needed because of the default...
+
+      //return true;
+    }
+
+    //*******************************************************************************************************
+    public bool GetINIValue(string pszSection, string pszEntry, ref string pszBuf, string Default, bool caseSensitive)
     {
       int Status;
 
@@ -35,7 +91,7 @@ namespace ns_ini
       // If one or more characters were parsed clean it up
       if (Status > 0)
       {
-        pszBuf = pszBuf.ToUpper();
+        if (!caseSensitive) pszBuf = pszBuf.ToUpper();
       }
       //else --not needed because of the default...
 

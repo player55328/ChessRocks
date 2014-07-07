@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,46 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="gameNum.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="white.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="black.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="result.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="moveList.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="header.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="fen.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        AAABAAEAICAQAAAABADoAgAAFgAAACgAAAAgAAAAQAAAAAEABAAAAAAAAAIAAAAAAAAAAAAAEAAAABAA
-        AAAAAAAAAACAAACAAAAAgIAAgAAAAIAAgACAgAAAgICAAMDAwAAAAP8AAP8AAAD//wD/AAAA/wD/AP//
-        AAD///8Ad3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3
-        iIh3d4iId3eIiIiId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iI
-        d3eIiHd3iIh3d4iId3d3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3
-        iIh3d4iId3eIiHd3iIh3d4iIiIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iI
-        d3eIiHd3iIh3d4iId3eIiHd3iIh3d3d3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3
-        iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIiIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iI
-        d3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3d3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3
-        iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiIiId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iI
-        d3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3cAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
-</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="uci" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>.\uci.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
