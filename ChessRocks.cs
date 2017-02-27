@@ -133,6 +133,7 @@ namespace ChessRocks
     protected int whiteBetter, blackBetter, whiteQuestionable, blackQuestionable;
     protected int whitePoor, blackPoor, whiteVeryPoor, blackVeryPoor;
     //protected int scrollMove = 0;
+    protected int loadRow = 0;
 
     public Bitmap wRook, wPawn, wQueen, wKing, wBishop, wKnight;
     public Bitmap kRook, kPawn, kQueen, kKing, kBishop, kKnight;
@@ -175,6 +176,9 @@ namespace ChessRocks
     protected Process engine2 = null;
     protected bool engineActive2 = false;
 
+    protected string starting960Fen = "";
+    protected Random rndnum = new Random();
+    
     #endregion
 
     #region Constructor
@@ -182,6 +186,8 @@ namespace ChessRocks
     public ChessRocks()
     {
       InitializeComponent();
+
+      PSContextMenu(false);
 
       savePGN.BackColor = Color.LightBlue;
 
@@ -258,7 +264,7 @@ namespace ChessRocks
       chess.GetINIValue("SETTINGS", "POOR_PAWNS", ref iniPoor, "0.6");
       chess.GetINIValue("SETTINGS", "VERY_POOR_PAWNS", ref iniVeryPoor, "1.2");
 
-      string iniCPUTime = ""; 
+      string iniCPUTime = "";
       chess.GetINIValue("SETTINGS", "CPU_TIME_SECONDS", ref iniCPUTime, "5");
       chess.GetINIValue("SETTINGS", "CPU_TIME_SECONDS_WHITE", ref iniCPUTimeWhite, iniCPUTime);
       chess.GetINIValue("SETTINGS", "CPU_TIME_SECONDS_BLACK", ref iniCPUTimeBlack, iniCPUTime);
@@ -347,7 +353,14 @@ namespace ChessRocks
       ClearPieceMoving();
       SetupForNextLiveGame();
 
-      moveTree.Nodes[0].Tag = new Move(virtualChessBoard.fenStart, 1);
+      if(play960.Checked)
+      {
+        moveTree.Nodes[0].Tag = new Move(virtualChessBoard.fenStart, 1, virtualChessBoard.fenStart);
+      }
+      else
+      {
+        moveTree.Nodes[0].Tag = new Move(virtualChessBoard.fenStart, 1);
+      }
       duplicateFENs.Text = "1";
       theBoard.Size = new Size(8 * (split2.Panel1.Size.Width / 8), 8 * ((split2.Panel1.Size.Height - 40) / 8));
 
@@ -633,7 +646,7 @@ namespace ChessRocks
 
       internalBlank = false;
       string baseMessage = "A valid folder must be selected with the all the proper piece image files in it. " + piecePath + "\\";
-      
+
       while (true)
       {
         if (!File.Exists(piecePath + "\\wRook.bmp") && !File.Exists(piecePath + "\\wr.bmp") && !File.Exists(piecePath + "\\wr.png"))
@@ -740,7 +753,7 @@ namespace ChessRocks
           }
         }
       }
-      
+
       wRookOriginal.MakeTransparent(wRookOriginal.GetPixel(0, 0));
       wRooksm = ResizeImage(wRookOriginal, width, height);
 
@@ -766,7 +779,7 @@ namespace ChessRocks
           }
         }
       }
-     
+
       wKnightOriginal.MakeTransparent(wKnightOriginal.GetPixel(0, 0));
       wKnightsm = ResizeImage(wKnightOriginal, width, height);
 
@@ -792,7 +805,7 @@ namespace ChessRocks
           }
         }
       }
-     
+
       wBishopOriginal.MakeTransparent(wBishopOriginal.GetPixel(0, 0));
       wBishopsm = ResizeImage(wBishopOriginal, width, height);
 
@@ -818,7 +831,7 @@ namespace ChessRocks
           }
         }
       }
-      
+
       wQueenOriginal.MakeTransparent(wQueenOriginal.GetPixel(0, 0));
       wQueensm = ResizeImage(wQueenOriginal, width, height);
 
@@ -844,7 +857,7 @@ namespace ChessRocks
           }
         }
       }
-      
+
       wPawnOriginal.MakeTransparent(wPawnOriginal.GetPixel(0, 0));
       wPawnsm = ResizeImage(wPawnOriginal, width, height);
 
@@ -870,7 +883,7 @@ namespace ChessRocks
           }
         }
       }
-      
+
       wKingOriginal.MakeTransparent(wKingOriginal.GetPixel(0, 0));
 
       try
@@ -895,7 +908,7 @@ namespace ChessRocks
           }
         }
       }
-      
+
       kRookOriginal.MakeTransparent(kRookOriginal.GetPixel(0, 0));
       kRooksm = ResizeImage(kRookOriginal, width, height);
 
@@ -921,7 +934,7 @@ namespace ChessRocks
           }
         }
       }
-      
+
       kKnightOriginal.MakeTransparent(kKnightOriginal.GetPixel(0, 0));
       kKnightsm = ResizeImage(kKnightOriginal, width, height);
 
@@ -973,7 +986,7 @@ namespace ChessRocks
           }
         }
       }
-      
+
       kQueenOriginal.MakeTransparent(kQueenOriginal.GetPixel(0, 0));
       kQueensm = ResizeImage(kQueenOriginal, width, height);
 
@@ -1025,7 +1038,7 @@ namespace ChessRocks
           }
         }
       }
-      
+
       kKingOriginal.MakeTransparent(kKingOriginal.GetPixel(0, 0));
 
       try
@@ -1050,7 +1063,7 @@ namespace ChessRocks
           }
         }
       }
-      
+
       blankOriginal.MakeTransparent(blankOriginal.GetPixel(0, 0));
       blanksm = ResizeImage(blankOriginal, width, height);
 
@@ -1159,6 +1172,11 @@ namespace ChessRocks
       black13.BackgroundImage = blank;
       black14.BackgroundImage = blank;
       black15.BackgroundImage = blank;
+
+      if (positionSetup.Checked)
+      {
+        UpdateCasualties(true, 1, 1, 1, 1, 1);
+      }
     }
 
     //*******************************************************************************************************
@@ -1212,7 +1230,7 @@ namespace ChessRocks
           tmp = wQueensm;
         }
 
-        //this will clrea the text if zero
+        //this will clear the text if zero
         AddToWhiteTotal(0);
 
         if (white1.AccessibleName.Length == 0)
@@ -1448,37 +1466,67 @@ namespace ChessRocks
     //*******************************************************************************************************
     protected void UpdateCasualties(bool white, int queens, int rooks, int bishops, int knights, int pawns)
     {
-      if (white) whiteTotal.Text = "0";
-      else blackTotal.Text = "0";
-
-      for (int i = 0; i < queens; i++)
+      if (positionSetup.Checked)
       {
-        if (white) AddCasualty("wQueen");
-        else AddCasualty("kQueen");
+        white3.BackgroundImage = SelectPiece("wQueen", true);
+        white3.AccessibleName = "wQueen";
+        white5.BackgroundImage = SelectPiece("wRook", true);
+        white5.AccessibleName = "wRook";
+        white7.BackgroundImage = SelectPiece("wBishop", true);
+        white7.AccessibleName = "wBishop";
+        white9.BackgroundImage = SelectPiece("wKnight", true);
+        white9.AccessibleName = "wKnight";
+        white11.BackgroundImage = SelectPiece("wPawn", true);
+        white11.AccessibleName = "wPawn";
+
+        black3.BackgroundImage = SelectPiece("kQueen", true);
+        black3.AccessibleName = "kQueen";
+        black5.BackgroundImage = SelectPiece("kRook", true);
+        black5.AccessibleName = "kRook";
+        black7.BackgroundImage = SelectPiece("kBishop", true);
+        black7.AccessibleName = "kBishop";
+        black9.BackgroundImage = SelectPiece("kKnight", true);
+        black9.AccessibleName = "kKnight";
+        black11.BackgroundImage = SelectPiece("kPawn", true);
+        black11.AccessibleName = "kPawn";
+
+        whiteTotal.Text = "";
+        blackTotal.Text = "";
       }
-
-      for (int i = 0; i < rooks; i++)
+      else
       {
-        if (white) AddCasualty("wRook");
-        else AddCasualty("kRook");
-      }
+        if (white) whiteTotal.Text = "0";
+        else blackTotal.Text = "0";
 
-      for (int i = 0; i < bishops; i++)
-      {
-        if (white) AddCasualty("wBishop");
-        else AddCasualty("kBishop");
-      }
+        for (int i = 0; i < queens; i++)
+        {
+          if (white) AddCasualty("wQueen");
+          else AddCasualty("kQueen");
+        }
 
-      for (int i = 0; i < knights; i++)
-      {
-        if (white) AddCasualty("wKnight");
-        else AddCasualty("kKnight");
-      }
+        for (int i = 0; i < rooks; i++)
+        {
+          if (white) AddCasualty("wRook");
+          else AddCasualty("kRook");
+        }
 
-      for (int i = 0; i < pawns; i++)
-      {
-        if (white) AddCasualty("wPawn");
-        else AddCasualty("kPawn");
+        for (int i = 0; i < bishops; i++)
+        {
+          if (white) AddCasualty("wBishop");
+          else AddCasualty("kBishop");
+        }
+
+        for (int i = 0; i < knights; i++)
+        {
+          if (white) AddCasualty("wKnight");
+          else AddCasualty("kKnight");
+        }
+
+        for (int i = 0; i < pawns; i++)
+        {
+          if (white) AddCasualty("wPawn");
+          else AddCasualty("kPawn");
+        }
       }
     }
 
@@ -1751,16 +1799,6 @@ namespace ChessRocks
       return false;
     }
 
-    ////*******************************************************************************************************
-    //protected void InvalidMove(int MoveNum, bool whiteMove, string move)
-    //{
-    //  if (!checkQuietly)
-    //  {
-    //    if (whiteMove) MessageBox.Show("Invalid White Move #" + fullMove.ToString() + " " + move + "\n" + currentMoveList + "\n" + sanList + "\n" + lanList);
-    //    else MessageBox.Show("Invalid Black Move #" + (fullMove - 1).ToString() + " " + move + "\n" + currentMoveList + "\n" + sanList + "\n" + lanList);
-    //  }
-    //}
-
     //*******************************************************************************************************
     protected bool DiagonalIsClear(Point src, Point dst, Point[] allowedMoves)
     {
@@ -2014,42 +2052,6 @@ namespace ChessRocks
 
     #region File Stuff
 
-    //drag and drop of a pgn file?
-    ////*******************************************************************************************************
-    //protected void Chess_DragDrop(object sender, DragEventArgs e)
-    //{
-    //  //if (!disableDD)
-    //  //{
-    //  //  DisableEverything();
-
-    //  //  play.Checked = true;
-    //  //  ChangeButton(ref pauseGame, "New", "Start a new game.");
-    //  //  ChangeButton(ref tradeSides, "Resume", "Resume an unfinnished game.");
-    //  //  moveStatus.Text = "New / Resume or change mode.";
-
-    //  //  // transfer the filenames to a string array
-    //  //  string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-
-    //  //  //if multiple files are dropped only the first one will be processed...
-    //  //  if (Path.GetFileName(files[0]).ToLower().EndsWith(".pgn"))
-    //  //  {
-    //  //    LoadNewPGNFile(Path.GetFullPath(files[0]), false);
-    //  //  }
-    //  //  else if (Path.GetFileName(files[0]).ToLower().EndsWith(".lan"))
-    //  //  {
-    //  //    LoadNewPGNFile(Path.GetFullPath(files[0]), true);
-    //  //  }
-    //  //  else
-    //  //  {
-    //  //    MessageBox.Show("Invalid file type, only pgn files supported...");
-    //  //  }
-    //  //}
-    //  //else
-    //  //{
-    //  //  MessageBox.Show("Unable to process dropped pgn file in the current program state.");
-    //  //}
-    //}
-
     //*******************************************************************************************************
     private void SaveTheGame()
     {
@@ -2152,7 +2154,7 @@ namespace ChessRocks
     }
 
     //*******************************************************************************************************
-    private bool LoadGameFromList(int loadRow)
+    private bool LoadGameFromList()
     {
       bool puzzlePlayersUnknown = false;
 
@@ -2191,7 +2193,23 @@ namespace ChessRocks
           puzzlePlayersUnknown = true;
         }
       }
-
+      
+      if (gameList.gameListDataGridView.Rows[loadRow].Cells["variant"].Value.ToString().Equals("Chess960") ||
+        gameList.gameListDataGridView.Rows[loadRow].Cells["variant"].Value.ToString().Equals("Fischerandom") ||
+        gameList.gameListDataGridView.Rows[loadRow].Cells["variant"].Value.ToString().Equals("chess 960"))
+      {
+        play960.Checked = true;
+        starting960Fen = gameList.gameListDataGridView.Rows[loadRow].Cells["fen"].Value.ToString();
+        virtualChessBoard = new Chess(starting960Fen);
+      }
+      else
+      {
+        play960.Checked = false;
+        starting960Fen = "";
+        virtualChessBoard = new Chess();
+      }
+      fenNotation.Text = virtualChessBoard.fenStart;
+      
       gameResult.Text = gameList.gameListDataGridView.Rows[loadRow].Cells["result"].Value.ToString();
       fenNotation.Text = gameList.gameListDataGridView.Rows[loadRow].Cells["fen"].Value.ToString();
 
@@ -2204,92 +2222,133 @@ namespace ChessRocks
 
       string moves = gameList.gameListDataGridView.Rows[loadRow].Cells["moveList"].Value.ToString();
 
-      Moves = virtualChessBoard.LoadList(moves, fenNotation.Text, true);
-
       moveTree.Nodes.Clear();
       TreeNode main;
 
-      if (puzzle)
+      if (moves.Length == 0)
       {
-        main = new TreeNode("Puzzle");
-      }
-      else
-      {
+        //resumingGame = true;
         main = new TreeNode("Main");
-      }
-
-      moveTree.Nodes.Add(main);
-      moveTree.Nodes[0].Tag = new Move(gameList.gameListDataGridView.Rows[loadRow].Cells["fen"].Value.ToString(), 1);
-
-      if (Moves.Count > 0)
-      {
-        mainPlycount = 0;
-
-        //save moves from virtual movelist to displayed movelist
-        moveTree.BeginUpdate();
-        for (int row = 0; row < Moves.Count; row++)
+        moveTree.Nodes.Add(main);
+        if (play960.Checked)
         {
-          AddMoveNode((Move)(Moves[row]), main);
-        }
-        moveTree.Nodes[0].Expand();
-        moveTree.EndUpdate();
-
-        if (puzzle)
-        {
-          if (puzzlePlayersUnknown)
-          {
-            //need to fix this 
-            //the last move should have been made by the human?
-            if (((Move)(moveTree.Nodes[0].LastNode.Tag)).whitesMove)
-            {
-              gameInfo.Text += "\r\n[WhiteType \"human\"]";
-              gameInfo.Text += "\r\n[BlackType \"computer\"]";
-              puzzleComputerWhite = true;
-            }
-            else
-            {
-              gameInfo.Text += "\r\n[WhiteType \"computer\"]";
-              gameInfo.Text += "\r\n[BlackType \"human\"]";
-              puzzleComputerWhite = false;
-            }
-          }
-
-          if (whitesMove && !puzzleComputerWhite)
-          {
-            moveTree.SelectedNode = moveTree.Nodes[0];
-            moveStatus.Text = "White to move...";
-          }
-          else if (!whitesMove && puzzleComputerWhite)
-          {
-            moveTree.SelectedNode = moveTree.Nodes[0];
-            moveStatus.Text = "Black to move...";
-          }
-          else
-          {
-            Thread.Sleep(1000);
-            moveTree.Nodes[0].FirstNode.ForeColor = Color.Black;
-            moveTree.SelectedNode = moveTree.Nodes[0].FirstNode;
-            if (!((Move)(moveTree.Nodes[0].FirstNode.Tag)).whitesMove)
-            {
-              moveStatus.Text = "White to move...";
-            }
-            else
-            {
-              moveStatus.Text = "Black to move...";
-            }
-          }
+          moveTree.Nodes[0].Tag = new Move(gameList.gameListDataGridView.Rows[loadRow].Cells["fen"].Value.ToString(), 1, virtualChessBoard.fenStart);
         }
         else
         {
-          mainPlycount = Moves.Count;
-          moveTree.SelectedNode = moveTree.Nodes[0];
-          moveStatus.Text = "Success Loading game #" + (loadRow + 1).ToString();
+          moveTree.Nodes[0].Tag = new Move(gameList.gameListDataGridView.Rows[loadRow].Cells["fen"].Value.ToString(), 1);
         }
+        mainPlycount = 0;// Moves.Count;
+        moveTree.SelectedNode = moveTree.Nodes[0];
+        //moveStatus.Text = "Success Loading game #" + (loadRow + 1).ToString();
+        //if (!((Move)(moveTree.Nodes[0].FirstNode.Tag)).whitesMove)
+        if (whitesMove)
+        {
+          moveStatus.Text = "White to move...";
+        }
+        else
+        {
+          moveStatus.Text = "Black to move...";
+        }
+
         moveTree.Refresh();
         moveTree.Focus();
         UpdateTitle();
 
         return true;
+      }
+      else
+      {
+        Moves = virtualChessBoard.LoadList(moves, fenNotation.Text, true);
+
+        if (puzzle)
+        {
+          main = new TreeNode("Puzzle");
+        }
+        else
+        {
+          main = new TreeNode("Main");
+        }
+
+        moveTree.Nodes.Add(main);
+        if (play960.Checked)
+        {
+          moveTree.Nodes[0].Tag = new Move(gameList.gameListDataGridView.Rows[loadRow].Cells["fen"].Value.ToString(), 1, virtualChessBoard.fenStart);
+        }
+        else
+        {
+          moveTree.Nodes[0].Tag = new Move(gameList.gameListDataGridView.Rows[loadRow].Cells["fen"].Value.ToString(), 1);
+        }
+        if (Moves.Count > 0)
+        {
+          mainPlycount = 0;
+
+          //save moves from virtual movelist to displayed movelist
+          moveTree.BeginUpdate();
+          for (int row = 0; row < Moves.Count; row++)
+          {
+            AddMoveNode((Move)(Moves[row]), main);
+          }
+          moveTree.Nodes[0].Expand();
+          moveTree.EndUpdate();
+
+          if (puzzle)
+          {
+            if (puzzlePlayersUnknown)
+            {
+              //need to fix this 
+              //the last move should have been made by the human?
+              if (((Move)(moveTree.Nodes[0].LastNode.Tag)).whitesMove)
+              {
+                gameInfo.Text += "\r\n[WhiteType \"human\"]";
+                gameInfo.Text += "\r\n[BlackType \"computer\"]";
+                puzzleComputerWhite = true;
+              }
+              else
+              {
+                gameInfo.Text += "\r\n[WhiteType \"computer\"]";
+                gameInfo.Text += "\r\n[BlackType \"human\"]";
+                puzzleComputerWhite = false;
+              }
+            }
+
+            if (whitesMove && !puzzleComputerWhite)
+            {
+              moveTree.SelectedNode = moveTree.Nodes[0];
+              moveStatus.Text = "White to move...";
+            }
+            else if (!whitesMove && puzzleComputerWhite)
+            {
+              moveTree.SelectedNode = moveTree.Nodes[0];
+              moveStatus.Text = "Black to move...";
+            }
+            else
+            {
+              Thread.Sleep(1000);
+              moveTree.Nodes[0].FirstNode.ForeColor = Color.Black;
+              moveTree.SelectedNode = moveTree.Nodes[0].FirstNode;
+              if (!((Move)(moveTree.Nodes[0].FirstNode.Tag)).whitesMove)
+              {
+                moveStatus.Text = "White to move...";
+              }
+              else
+              {
+                moveStatus.Text = "Black to move...";
+              }
+            }
+          }
+          else
+          {
+            mainPlycount = Moves.Count;
+            moveTree.SelectedNode = moveTree.Nodes[0];
+            moveStatus.Text = "Success Loading game #" + (loadRow + 1).ToString();
+          }
+          moveTree.Refresh();
+          moveTree.Focus();
+          UpdateTitle();
+
+          return true;
+        }
       }
 
       return false;
@@ -2761,7 +2820,7 @@ namespace ChessRocks
           {
             //black is a computer player
             string tmp = GetHeaderValue("BlackAnalysisTime");
-              
+
             //for backwards compatibility
             if (tmp.Length == 0) GetHeaderValue("AnalysisTime");
 
@@ -2809,9 +2868,20 @@ namespace ChessRocks
         else
         {
           MessageBox.Show("This is not an incomplete game, changing to Move Analysis mode.");
-          play.Checked = false; 
+          play.Checked = false;
           moveAnalysis.Checked = true;
           DisableMainSelections(false);
+          if (!computerWhite.Checked && !computerBlack.Checked)
+          {
+            MessageBox.Show("You must select an engine if cpu analysis is desired...");
+          }
+
+          if (gameList.gameListDataGridView.Rows[loadRow].Cells["curpos"].Value.ToString().Length > 0)
+          {
+            fenNotation.Text = gameList.gameListDataGridView.Rows[loadRow].Cells["curpos"].Value.ToString();
+            ResetPieces(fenNotation.Text);
+          }
+
         }
       }
     }
@@ -2947,9 +3017,9 @@ namespace ChessRocks
 
         disableDD = false;
 
-        int loadRow = gameList.gameListDataGridView.CurrentCell.RowIndex;
+        loadRow = gameList.gameListDataGridView.CurrentCell.RowIndex;
 
-        pgnLoaded = LoadGameFromList(loadRow);
+        pgnLoaded = LoadGameFromList();
         if (!pgnLoaded)
         {
           MessageBox.Show("Game " + (loadRow + 1).ToString() + " failed to load...");
@@ -3024,12 +3094,17 @@ namespace ChessRocks
       bool blankLineFound = false;
       bool moveMode = false;
       bool loadFEN = false;
+      bool loadCurrentPosition = false;
+      bool loadVariant = false;
       bool loadWhite = false;
       bool loadBlack = false;
       bool result = false;
+      bool moveModeEncountered = false;
 
       string fullMoveList = "", fullHeader = ""; ;
       string whitePlayer = "Unknown";
+      string CurrentPosition = "";
+      string Variant = "";
       string blackPlayer = "Unknown";
       string puzzleResult = "*";
       string line;
@@ -3048,10 +3123,13 @@ namespace ChessRocks
               tmp = tag.Trim();
               if (tmp.Length == 0)
               {
+                //skip blank lines
                 continue;
               }
               else if (moveMode)
               {
+                moveModeEncountered = true;
+
                 if ((tmp.Equals(".") || //chess.com puzzle delimeter
                      tmp.Equals("0-1") ||
                      tmp.Equals("1-0") ||
@@ -3090,12 +3168,16 @@ namespace ChessRocks
                   gameList.gameListDataGridView.Rows[loadRow].Cells["white"].Value = whitePlayer;
                   gameList.gameListDataGridView.Rows[loadRow].Cells["black"].Value = blackPlayer;
                   gameList.gameListDataGridView.Rows[loadRow].Cells["fen"].Value = fenNotation.Text;
+                  gameList.gameListDataGridView.Rows[loadRow].Cells["curpos"].Value = CurrentPosition;
+                  gameList.gameListDataGridView.Rows[loadRow].Cells["variant"].Value = Variant;
                   newGamesLoaded++;
 
                   //now see if there is another game - reset variables
                   fenNotation.Text = virtualChessBoard.fenStart;
                   fullMoveList = "";
                   fullHeader = "";
+                  CurrentPosition = "";
+                  Variant = "";
                   whitePlayer = "Unknown";
                   blackPlayer = "Unknown";
 
@@ -3105,10 +3187,13 @@ namespace ChessRocks
                   blankLineFound = false;
                   moveMode = false;
                   loadFEN = false;
+                  loadCurrentPosition = false;
+                  loadVariant = false;
                   loadWhite = false;
                   loadBlack = false;
                   fullMove = 1;
                   moveCount = 0;
+                  moveModeEncountered = false;
 
                   loadRow++;
                 }
@@ -3191,9 +3276,60 @@ namespace ChessRocks
                     {
                       fenNotation.Text += tmp.Substring(1);
                     }
+                    else if (tmp.Length == 4)
+                    {
+                      fenNotation.Text += " KQkq";
+                    }
                     else
                     {
                       fenNotation.Text += (" " + tmp);
+                    }
+                  }
+                }
+
+                if (loadCurrentPosition)
+                {
+                  if (tmp.EndsWith("]"))
+                  {
+                    CurrentPosition += (" " + tmp.Substring(0, tmp.Length - 2));
+                    loadCurrentPosition = false;
+                  }
+                  else
+                  {
+                    if (tmp.StartsWith("\""))
+                    {
+                      CurrentPosition += tmp.Substring(1);
+                    }
+                    else
+                    {
+                      CurrentPosition += (" " + tmp);
+                    }
+                  }
+                }
+
+                if (loadVariant)
+                {
+                  if (tmp.EndsWith("]"))
+                  {
+                    if (tmp.StartsWith("\""))
+                    {
+                      Variant = tmp.Substring(1, tmp.Length - 3);
+                    }
+                    else
+                    {
+                      Variant += (" " + tmp.Substring(0, tmp.Length - 2));
+                    }
+                    loadVariant = false;
+                  }
+                  else
+                  {
+                    if (tmp.StartsWith("\""))
+                    {
+                      Variant += tmp.Substring(1);
+                    }
+                    else
+                    {
+                      Variant += (" " + tmp);
                     }
                   }
                 }
@@ -3289,6 +3425,16 @@ namespace ChessRocks
                   loadFEN = true;
                   fenNotation.Text = "";
                 }
+                else if (tmp.StartsWith("[CurrentPosition"))
+                {
+                  loadCurrentPosition = true;
+                  CurrentPosition = "";
+                }
+                else if (tmp.StartsWith("[Variant"))
+                {
+                  loadVariant = true;
+                  Variant = "";
+                }
                 else if (tmp.Equals("[White"))
                 {
                   loadWhite = true;
@@ -3321,12 +3467,64 @@ namespace ChessRocks
                   moveMode = true;
                   fullMoveList += (" " + tmp);
                 }
+                else if (tmp.StartsWith("*"))
+                {
+                  if (blankLineFound)
+                  {
+                    moveCount++;
+                    moveMode = true;
+                    fullMoveList += (" " + tmp);
+                  }
+                }
+              }
+              else if (tmp.StartsWith("*") && !moveModeEncountered)
+              {
+                //this is a starting position with no actual moves made
+                if (blankLineFound)
+                {
+                  gameList.gameListDataGridView.Rows.Add();
+                  gameList.gameListDataGridView.Rows[loadRow].Cells["result"].Value = tmp;
+                  gameList.gameListDataGridView.Rows[loadRow].Cells["gameNum"].Value = (loadRow + 1).ToString();
+                  gameList.gameListDataGridView.Rows[loadRow].Cells["moveList"].Value = fullMoveList;
+                  gameList.gameListDataGridView.Rows[loadRow].Cells["header"].Value = fullHeader;
+                  gameList.gameListDataGridView.Rows[loadRow].Cells["white"].Value = whitePlayer;
+                  gameList.gameListDataGridView.Rows[loadRow].Cells["black"].Value = blackPlayer;
+                  gameList.gameListDataGridView.Rows[loadRow].Cells["fen"].Value = fenNotation.Text;
+                  gameList.gameListDataGridView.Rows[loadRow].Cells["curpos"].Value = CurrentPosition;
+                  gameList.gameListDataGridView.Rows[loadRow].Cells["variant"].Value = Variant;
+                  newGamesLoaded++;
+
+                  //now see if there is another game - reset variables
+                  fenNotation.Text = virtualChessBoard.fenStart;
+                  fullMoveList = "";
+                  fullHeader = "";
+                  whitePlayer = "Unknown";
+                  blackPlayer = "Unknown";
+
+                  commentMode = false;
+                  alternativeMode = false;
+                  bracketMode = false;
+                  blankLineFound = false;
+                  moveMode = false;
+                  loadFEN = false;
+                  loadWhite = false;
+                  loadBlack = false;
+                  fullMove = 1;
+                  moveCount = 0;
+                  moveModeEncountered = false;
+
+                  loadRow++;
+                }
+                else
+                {
+                  //not saving this game with no moves
+                }
               }
             }
           }
           else
           {
-            //in this case only the fist pgn game in the file will be read...
+            //in this case only the first pgn game in the file will be read...
             blankLineFound = true;
             if (positionSetup.Checked)
             {
@@ -3384,22 +3582,44 @@ namespace ChessRocks
         masterTimer.Stop();
         for (int row = 0; row < gameList.gameListDataGridView.Rows.Count; row++)
         {
+          moveStatus.Text = "Processing game #" + (row + 1).ToString();
+          moveStatus.Refresh();
+
+          //debug
+          //MessageBox.Show(moveStatus.Text);
+          
+          if (gameList.gameListDataGridView.Rows[row].Cells["variant"].Value.ToString().Equals("Chess960") ||
+              gameList.gameListDataGridView.Rows[row].Cells["variant"].Value.ToString().Equals("Fischerandom") ||
+              gameList.gameListDataGridView.Rows[row].Cells["variant"].Value.ToString().Equals("chess 960"))
+          {
+            play960.Checked = true;
+            starting960Fen = gameList.gameListDataGridView.Rows[row].Cells["fen"].Value.ToString();
+            virtualChessBoard = new Chess(starting960Fen);
+          }
+          else
+          {
+            play960.Checked = false;
+            starting960Fen = "";
+            virtualChessBoard = new Chess();
+          }
+          fenNotation.Text = virtualChessBoard.fenStart;
+          
           Moves = virtualChessBoard.LoadList(gameList.gameListDataGridView.Rows[row].Cells["moveList"].Value.ToString(),
-                                          gameList.gameListDataGridView.Rows[row].Cells["fen"].Value.ToString(),
-            //gameList.gameListDataGridView.Rows[row].Cells["fenPlus"].Value.ToString(),
-                                          true);
+                                             gameList.gameListDataGridView.Rows[row].Cells["fen"].Value.ToString(),
+                                             true);
           if (Moves.Count == 0)
           {
             MessageBox.Show("Game " + (row + 1).ToString() + " failed to load...");
             return false;
           }
         }
+        
         MessageBox.Show(gameList.gameListDataGridView.Rows.Count.ToString() + " Games Loaded Successfully...");
         masterTimer.Start();
       }
 
       //normal code
-      if (!LoadGameFromList(loadRow))
+      if (!LoadGameFromList())
       {
         MessageBox.Show("Game " + (loadRow + 1).ToString() + " failed to load...");
         return false;
@@ -3478,7 +3698,29 @@ namespace ChessRocks
     //*******************************************************************************************************
     private void appendToList_Click(object sender, EventArgs e)
     {
+      try
+      {
+        string ClipBoardData = GetGame();
 
+        if (ClipBoardData.Length > 0)
+        {
+          Clipboard.Clear();
+          Clipboard.SetDataObject(ClipBoardData);
+          //            changesMade.Visible = false;
+          if (ProcessReadPGN(ClipBoardData))
+          {
+            savePGN.BackColor = Color.LightBlue;
+          }
+          else
+          {
+            //save game to a tempory file - trying to save it to the list failed,,,
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show("saveToClipboard() failed... " + ex.ToString());
+      }
     }
 
     //*******************************************************************************************************
@@ -3501,7 +3743,6 @@ namespace ChessRocks
           {
             Clipboard.Clear();
             Clipboard.SetDataObject(ClipBoardData);
-            //            changesMade.Visible = false;
             savePGN.BackColor = Color.LightBlue;
           }
         }
@@ -3549,17 +3790,28 @@ namespace ChessRocks
             MoveNagComment = ((newLine || move.whitesMove) ? ((newLine ? "" : " ") +
               move.fullMove.ToString() + (move.whitesMove ? ". " : "... ")) : " ") +
               move.san + ((move.nag > 0) ? (" $" + move.nag.ToString()) : "");
-           
+
             //add the regular comment if there is one...
-            if(move.comment.Length > 1)
+            tmp = move.comment.Trim();
+            if (tmp.StartsWith("{")) tmp = tmp.Substring(1);
+            if (tmp.EndsWith("}")) tmp = tmp.Substring(0, tmp.Length - 1);
+            tmp = tmp.Trim();
+
+            if (tmp.Length > 0)
             {
+              //remove newlines
               tmp = move.comment.Replace("\r\n", " : ");
-              tmp = tmp.Replace("\r", null);
-              tmp = tmp.Replace("\n", null);
-              tmp = tmp.Replace("}{", " : ");
-              tmp = tmp.Replace("{", null);
-              tmp = tmp.Replace("}", null).Trim();
-              if(tmp.Length > 0) MoveNagComment += (" {" + tmp + "}");
+              tmp = tmp.Replace("\n", " : ");
+
+              //remove nested comments
+              tmp = tmp.Replace("}{", " - - ");
+              tmp = tmp.Replace("} {", " - - ");
+              tmp = tmp.Replace(" {", " -");
+              tmp = tmp.Replace("{", " -");
+              tmp = tmp.Replace("} ", "- ");
+              tmp = tmp.Replace("}", "- ");
+
+              if (tmp.Length > 0) MoveNagComment += (" { " + tmp + " }");
             }
 
             if (tn.Nodes.Count > 0)
@@ -4586,7 +4838,6 @@ namespace ChessRocks
       {
         ((Move)(moveTree.SelectedNode.Tag)).nag = nag.SelectedIndex;
         moveTree.Refresh();
-        //        changesMade.Visible = true;
         savePGN.BackColor = Color.Yellow;
         nagDropped = false;
       }
@@ -4683,27 +4934,34 @@ namespace ChessRocks
     //*******************************************************************************************************
     private string GetLabel(Move mv)
     {
-      if (showSAN)
+      try
       {
-        if (mv.whitesMove)
+        if (showSAN)
         {
-          return padding[mv.fullMove.ToString().Length + 3] + mv.fullMove.ToString() + ". " + mv.san + padding[mv.san.Length - 1];
+          if (mv.whitesMove)
+          {
+            return padding[mv.fullMove.ToString().Length + 3] + mv.fullMove.ToString() + ". " + mv.san + padding[mv.san.Length - 1];
+          }
+          else
+          {
+            return "     " + mv.san + padding[mv.san.Length - 1];
+          }
         }
         else
         {
-          return "     " + mv.san + padding[mv.san.Length - 1];
+          if (mv.whitesMove)
+          {
+            return padding[mv.fullMove.ToString().Length + 3] + mv.fullMove.ToString() + ". " + mv.lan + padding[mv.lan.Length + 1];
+          }
+          else
+          {
+            return "     " + mv.lan + padding[mv.lan.Length + 1];
+          }
         }
       }
-      else
+      catch
       {
-        if (mv.whitesMove)
-        {
-          return padding[mv.fullMove.ToString().Length + 3] + mv.fullMove.ToString() + ". " + mv.lan + padding[mv.lan.Length + 1];
-        }
-        else
-        {
-          return "     " + mv.lan + padding[mv.lan.Length + 1];
-        }
+        return " ";
       }
     }
 
@@ -4820,7 +5078,6 @@ namespace ChessRocks
       {
         ((Move)(moveTree.SelectedNode.Tag)).AddComment(comment);
         moveTree.Refresh();
-        //        changesMade.Visible = true;
         savePGN.BackColor = Color.Yellow;
       }
     }
@@ -4849,6 +5106,7 @@ namespace ChessRocks
         computerWhite.Enabled = true;
         computerBlack.Enabled = true;
         addRAV.Visible = false;
+        addRAV.Text = "Add CPU RAV";
       }
       moveTree.Focus();
     }
@@ -4858,8 +5116,8 @@ namespace ChessRocks
     {
       if (moveTree.SelectedNode.Text.StartsWith("RAV"))
       {
+        addRAV.Text = "Add CPU RAV";
         moveTree.SelectedNode.Remove();
-        //        changesMade.Visible = true;
         savePGN.BackColor = Color.Yellow;
       }
       else
@@ -4888,14 +5146,12 @@ namespace ChessRocks
           AddMoveNode((Move)(Moves[row]), moveTree.SelectedNode.Nodes[moveTree.SelectedNode.Nodes.Count - 1]);
         }
 
-        //        changesMade.Visible = true;
         savePGN.BackColor = Color.Yellow;
 
         if (evaluateRAV.Checked)
         {
           //evaluate each RAV move for its pawn value, (not for creating another alternate RAV list)
         }
-
       }
       else
       {
@@ -4954,7 +5210,16 @@ namespace ChessRocks
         dst += dialog.PromotedTo;
       }
 
-      Move moveObj = new Move(virtualChessBoard.fenStart, 1);
+      Move moveObj;
+      
+      if (play960.Checked)
+      {
+        moveObj = new Move(virtualChessBoard.fenStart, 1, virtualChessBoard.fenStart);
+      }
+      else
+      {
+        moveObj  = new Move(virtualChessBoard.fenStart, 1);
+      }
 
       if (virtualChessBoard.CheckMoveQuietly(src + dst, fenNotation.Text, ref moveObj))
       {
@@ -4989,7 +5254,9 @@ namespace ChessRocks
           }
           else if (moveTree.SelectedNode.NextNode != null)
           {
-            //must be adding a RAV at this location
+            //must be adding a manual RAV at this location
+            addRAV.Text = "End Manual RAV";
+            addRAV.Visible = true;
             moveTree.SelectedNode.NextNode.Nodes.Add(new TreeNode("RAV       "));
             moveTree.SelectedNode.NextNode.Nodes[moveTree.SelectedNode.NextNode.Nodes.Count - 1].Tag = moveObj;
             AddMoveNode(moveObj, moveTree.SelectedNode.NextNode.Nodes[moveTree.SelectedNode.NextNode.Nodes.Count - 1]);
@@ -5071,52 +5338,57 @@ namespace ChessRocks
     //*******************************************************************************************************
     protected void all_MouseDown(object sender, MouseEventArgs e)
     {
-      if (ManualMoveOK() && (((Panel)sender).AccessibleName.Length > 0))
+      if (e.Button == MouseButtons.Left)
       {
-        if ((e.X >= ((Panel)sender).Size.Width / 8) &&
-           (e.X <= ((Panel)sender).Size.Width * 7 / 8) &&
-           (e.Y >= ((Panel)sender).Size.Height / 8) &&
-           (e.Y <= ((Panel)sender).Size.Height * 7 / 8))
+        if (positionSetup.Checked)
         {
-          //messageBox.Items.Insert(0, "Down = " + e.X.ToString() + ":" + e.Y.ToString());
-          //messageBox.Items.Insert(0, "panel = " + ((Panel)sender).Size.Width.ToString() + ":" + ((Panel)sender).Size.Height.ToString());
-          //messageBox.Items.Insert(0, "inv = " + inv.Size.Width.ToString() + ":" + inv.Size.Height.ToString());
-
-          pieceMoving.AccessibleName = ((Panel)sender).AccessibleName;
-          pieceMoving.AccessibleDescription = ((Panel)sender).Name;
-
-          mouseDownLocation.X = e.X;
-          mouseDownLocation.Y = e.Y;
-
-          inv.Size = new Size(a8.Size.Width, a8.Size.Height);
-          //inv.BackgroundImage = blank;
-          inv.BackgroundImage = SelectPiece(pieceMoving.AccessibleName);
-          inv.Location = new Point(Location.X + panelmain.Location.X + theBoard.Location.X + ((Panel)sender).Location.X + 8, //8 is for the invisible side border of the invisible window
-                                   Location.Y + panelmain.Location.Y + theBoard.Location.Y + ((Panel)sender).Location.Y + 30); //30 is for the invisible caption of the invisible window
-
-          inv.Visible = true;
-          inv.Refresh();
-
-          ((Panel)sender).BackgroundImage = blank;
-          ((Panel)sender).Refresh();
+          if (((Panel)sender).AccessibleName.Length > 0)
+          {
+            pieceMoving.AccessibleName = ((Panel)sender).AccessibleName;
+          }
         }
-      }
-      else
-      {
-        ClearPieceMoving();
+        else if (ManualMoveOK() && (((Panel)sender).AccessibleName.Length > 0))
+        {
+          if ((e.X >= ((Panel)sender).Size.Width / 8) &&
+             (e.X <= ((Panel)sender).Size.Width * 7 / 8) &&
+             (e.Y >= ((Panel)sender).Size.Height / 8) &&
+             (e.Y <= ((Panel)sender).Size.Height * 7 / 8))
+          {
+            pieceMoving.AccessibleName = ((Panel)sender).AccessibleName;
+            pieceMoving.AccessibleDescription = ((Panel)sender).Name;
+
+            mouseDownLocation.X = e.X;
+            mouseDownLocation.Y = e.Y;
+
+            inv.Size = new Size(a8.Size.Width, a8.Size.Height);
+            inv.BackgroundImage = SelectPiece(pieceMoving.AccessibleName);
+            inv.Location = new Point(Location.X + panelmain.Location.X + theBoard.Location.X + ((Panel)sender).Location.X + 8, //8 is for the invisible side border of the invisible window
+                                     Location.Y + panelmain.Location.Y + theBoard.Location.Y + ((Panel)sender).Location.Y + 30); //30 is for the invisible caption of the invisible window
+
+            inv.Visible = true;
+            inv.Refresh();
+
+            ((Panel)sender).BackgroundImage = blank;
+            ((Panel)sender).Refresh();
+          }
+        }
+        else
+        {
+          ClearPieceMoving();
+        }
       }
     }
 
     //*******************************************************************************************************
     protected void all_MouseMove(object sender, MouseEventArgs e)
     {
-      if (pieceMoving.AccessibleName.Length > 0)
+      if (positionSetup.Checked)
       {
-        //messageBox.Items.Insert(0, "Move = " + e.X.ToString() + ":" + e.Y.ToString());
-
+      }
+      else if (pieceMoving.AccessibleName.Length > 0)
+      {
         inv.Location = new Point(Location.X + panelmain.Location.X + theBoard.Location.X + ((Panel)sender).Location.X + e.X - mouseDownLocation.X + 8,
                                  Location.Y + panelmain.Location.Y + theBoard.Location.Y + ((Panel)sender).Location.Y + e.Y - mouseDownLocation.Y + 30);
-
         inv.Refresh();
       }
       else
@@ -5134,13 +5406,11 @@ namespace ChessRocks
     //*******************************************************************************************************
     protected void all_MouseUp(object sender, MouseEventArgs e)
     {
-      if ((pieceMoving.AccessibleName.Length > 0) || (touchSource.Length > 0))
+      if (e.Button == MouseButtons.Left)
       {
         string dst, src = pieceMoving.AccessibleDescription;
 
-        if (touchSource.Length > 0) src = touchSource;
-        
-        if (ManualMoveOK())
+        if (positionSetup.Checked)
         {
           int X = (theBoard.Controls[((Panel)sender).Name].Location.X + e.X) / a1.Width;
           int Y = (theBoard.Controls[((Panel)sender).Name].Location.Y + e.Y) / a1.Height;
@@ -5155,164 +5425,205 @@ namespace ChessRocks
             {
               dst = theBoard.Controls[boardLayout[X, Y]].Name;
             }
+            theBoard.Controls[dst].BackgroundImage = SelectPiece(pieceMoving.AccessibleName);
+            theBoard.Controls[dst].AccessibleName = pieceMoving.AccessibleName;
+          }
+        }
+        else if ((pieceMoving.AccessibleName.Length > 0) || (touchSource.Length > 0))
+        {
+          if (touchSource.Length > 0) src = touchSource;
 
-            if (dst.Equals(src))
+          if (ManualMoveOK())
+          {
+            int X = (theBoard.Controls[((Panel)sender).Name].Location.X + e.X) / a1.Width;
+            int Y = (theBoard.Controls[((Panel)sender).Name].Location.Y + e.Y) / a1.Height;
+
+            if (OnBoard(X, Y))
             {
-              //piece was not moved...should implement touch move rule?
-              theBoard.Controls[dst].BackgroundImage = SelectPiece(pieceMoving.AccessibleName);
-              ClearPieceMoving();
-              if (touchSource.Length == 0) touchSource = src;
-              else touchSource = "";
-            }
-            else if (!positionSetup.Checked || (positionSetup.Checked && makeAPuzzle.Checked))
-            {
-              //rules apply!
-              if ((whitesMove && pieceMoving.AccessibleName.StartsWith("w")) ||
-                 (!whitesMove && pieceMoving.AccessibleName.StartsWith("k")) || ((touchSource.Length > 0) &&
-                 ((whitesMove && theBoard.Controls[touchSource].AccessibleName.StartsWith("w")) ||
-                 (!whitesMove && theBoard.Controls[touchSource].AccessibleName.StartsWith("k")))))
+              if (reversedBoard)
+              {
+                dst = theBoard.Controls[reversedBoardLayout[X, Y]].Name;
+              }
+              else
+              {
+                dst = theBoard.Controls[boardLayout[X, Y]].Name;
+              }
+
+              if (dst.Equals(src))
+              {
+                //piece was not moved...should implement touch move rule?
+                theBoard.Controls[dst].BackgroundImage = SelectPiece(pieceMoving.AccessibleName);
+                ClearPieceMoving();
+                if (touchSource.Length == 0) touchSource = src;
+                else touchSource = "";
+              }
+              else if (!positionSetup.Checked || (positionSetup.Checked && makeAPuzzle.Checked))
+              {
+                //rules apply!
+                if ((whitesMove && pieceMoving.AccessibleName.StartsWith("w")) ||
+                   (!whitesMove && pieceMoving.AccessibleName.StartsWith("k")) || ((touchSource.Length > 0) &&
+                   ((whitesMove && theBoard.Controls[touchSource].AccessibleName.StartsWith("w")) ||
+                   (!whitesMove && theBoard.Controls[touchSource].AccessibleName.StartsWith("k")))))
                 {
                   touchSource = "";
 
-                if (puzzle)
-                {
-                  //check for pawn promotion first
-                  if (dst.Length > 2)
+                  if (puzzle)
                   {
-                    if (!IsAPawnPromotion(src, dst.Substring(0, 2)))
+                    //check for pawn promotion first
+                    if (dst.Length > 2)
                     {
-                      MessageBox.Show("Unknown move, src = " + src + ", dst = " + dst);
-                      ResetPieces(fenNotation.Text);
-                      return;
-                    }
-                  }
-                  else if (IsAPawnPromotion(src, dst))
-                  {
-                    Promotion dialog = new ns_Promotion.Promotion(this, whitesMove);
-                    dialog.ShowDialog();
-                    dst += dialog.PromotedTo;
-                  }
-
-                  if (MoveMatch(src + dst))
-                  {
-                    //this is done to see if the move ends the game
-                    Move moveObj = new Move(virtualChessBoard.fenStart, 1);
-
-                    if (virtualChessBoard.CheckMoveQuietly(src + dst, fenNotation.Text, ref moveObj))
-                    {
-                      if (moveTree.SelectedNode.Text.Equals("Puzzle"))
+                      if (!IsAPawnPromotion(src, dst.Substring(0, 2)))
                       {
-                        moveTree.Nodes[0].FirstNode.ForeColor = Color.Black;
-                        moveTree.SelectedNode = moveTree.Nodes[0].FirstNode;
-                      }
-                      else
-                      {
-                        moveTree.SelectedNode.NextNode.ForeColor = Color.Black;
-                        moveTree.SelectedNode = moveTree.SelectedNode.NextNode;
-                      }
-                      ClearPieceMoving();
-
-                      if (moveObj.gameOver)
-                      {
-                        moveStatus.Text = "Puzzle Successfully Completed!!!";
+                        MessageBox.Show("Unknown move, src = " + src + ", dst = " + dst);
+                        ResetPieces(fenNotation.Text);
                         return;
                       }
+                    }
+                    else if (IsAPawnPromotion(src, dst))
+                    {
+                      Promotion dialog = new ns_Promotion.Promotion(this, whitesMove);
+                      dialog.ShowDialog();
+                      dst += dialog.PromotedTo;
+                    }
+
+                    if (MoveMatch(src + dst))
+                    {
+                      //this is done to see if the move ends the game
+                      Move moveObj;
+                      
+                      if (play960.Checked)
+                      {
+                        moveObj = new Move(virtualChessBoard.fenStart, 1, virtualChessBoard.fenStart);
+                      }
                       else
                       {
-                        //make the computers next move
-                        if (moveTree.SelectedNode.NextNode != null)
+                        moveObj = new Move(virtualChessBoard.fenStart, 1);
+                      }
+                      if (virtualChessBoard.CheckMoveQuietly(src + dst, fenNotation.Text, ref moveObj))
+                      {
+                        if (moveTree.SelectedNode.Text.Equals("Puzzle"))
                         {
-                          Thread.Sleep(1000);
-                          moveTree.SelectedNode.NextNode.ForeColor = Color.Black;
-                          moveTree.SelectedNode = moveTree.SelectedNode.NextNode;
+                          moveTree.Nodes[0].FirstNode.ForeColor = Color.Black;
+                          moveTree.SelectedNode = moveTree.Nodes[0].FirstNode;
                         }
                         else
                         {
-                          //there are no move moves so the game must be over
+                          moveTree.SelectedNode.NextNode.ForeColor = Color.Black;
+                          moveTree.SelectedNode = moveTree.SelectedNode.NextNode;
+                        }
+                        ClearPieceMoving();
+
+                        if (moveObj.gameOver)
+                        {
                           moveStatus.Text = "Puzzle Successfully Completed!!!";
                           return;
                         }
+                        else
+                        {
+                          //make the computers next move
+                          if (moveTree.SelectedNode.NextNode != null)
+                          {
+                            Thread.Sleep(1000);
+                            moveTree.SelectedNode.NextNode.ForeColor = Color.Black;
+                            moveTree.SelectedNode = moveTree.SelectedNode.NextNode;
+                          }
+                          else
+                          {
+                            //there are no move moves so the game must be over
+                            moveStatus.Text = "Puzzle Successfully Completed!!!";
+                            return;
+                          }
+                        }
                       }
+                      else
+                      {
+                        //this should not happen...the puzzle moves were check when loaded
+                        MessageBox.Show("Puzzle Error...");
+                      }
+                      touchSource = "";
+                      return;
                     }
                     else
                     {
-                      //this should not happen...the puzzle moves were check when loaded
-                      MessageBox.Show("Puzzle Error...");
+                      InvalidMoveMade();
+                      ResetPieces(fenNotation.Text);
+                      moveStatus.Text = "Not the correct move ... try again.";
+                      ClearPieceMoving();
+                      touchSource = "";
+                      return;
                     }
-                    touchSource = ""; 
-                    return;
                   }
                   else
                   {
-                    InvalidMoveMade();
-                    ResetPieces(fenNotation.Text);
-                    moveStatus.Text = "Not the correct move ... try again.";
-                    ClearPieceMoving();
-                    touchSource = "";
-                    return;
+                    if (MakeAMove(src, dst))
+                    {
+                      if (play.Checked && (computerWhite.Checked || computerBlack.Checked))
+                      {
+                        WriteEngineCommands(src, dst);
+                      }
+
+                      if (play.Checked)
+                      {
+                        savePGN.Visible = true;
+                        pgnLoaded = true;
+                      }
+                      touchSource = "";
+                      return;
+                    }
+                    else
+                    {
+                      InvalidMoveMade();
+                      ResetPieces(fenNotation.Text);
+                      moveStatus.Text = "Invalid move not allowed, " + (whitesMove ? "whites move." : "blacks move.");
+                      ClearPieceMoving();
+                      touchSource = "";
+                      return;
+                    }
                   }
                 }
                 else
                 {
-                  if (MakeAMove(src, dst))
-                  {
-                    if (play.Checked && (computerWhite.Checked || computerBlack.Checked))
-                    {
-                      WriteEngineCommands(src, dst);
-                    }
-
-                    if (play.Checked)
-                    {
-                      savePGN.Visible = true;
-                      pgnLoaded = true;
-                    }
-                    touchSource = "";
-                    return;
-                  }
-                  else
-                  {
-                    InvalidMoveMade();
-                    ResetPieces(fenNotation.Text);
-                    moveStatus.Text = "Invalid move not allowed, " + (whitesMove ? "whites move." : "blacks move.");
-                    ClearPieceMoving();
-                    touchSource = "";
-                    return;
-                  }
+                  InvalidMoveMade();
+                  ResetPieces(fenNotation.Text);
+                  moveStatus.Text = "Out of turn move, " + (whitesMove ? "whites move." : "blacks move.");
+                  ClearPieceMoving();
+                  touchSource = "";
+                  return;
                 }
               }
               else
               {
-                InvalidMoveMade();
-                ResetPieces(fenNotation.Text);
-                moveStatus.Text = "Out of turn move, " + (whitesMove ? "whites move." : "blacks move.");
+                //move the piece, rules do not apply
+                if (touchSource.Length == 0)
+                {
+                  theBoard.Controls[dst].BackgroundImage = SelectPiece(pieceMoving.AccessibleName);
+                  theBoard.Controls[dst].AccessibleName = pieceMoving.AccessibleName;
+                  theBoard.Controls[src].BackgroundImage = blank;
+                  theBoard.Controls[src].AccessibleName = "";
+                  theBoard.Controls[src].Refresh();
+                }
+                else
+                {
+                  theBoard.Controls[dst].BackgroundImage = SelectPiece(theBoard.Controls[touchSource].AccessibleName);
+                  theBoard.Controls[dst].AccessibleName = theBoard.Controls[touchSource].AccessibleName;
+                  theBoard.Controls[touchSource].BackgroundImage = blank;
+                  theBoard.Controls[touchSource].AccessibleName = "";
+                  theBoard.Controls[touchSource].Refresh();
+                }
+                theBoard.Controls[dst].Refresh();
                 ClearPieceMoving();
+                //defaults to white, adjustable in edit menu
+                fenNotation.Text = ToFEN(!positionSeupAsWhitesMove);
                 touchSource = "";
                 return;
               }
             }
             else
             {
-              //move the piece, rules do not apply
-              if (touchSource.Length == 0)
-              {
-                theBoard.Controls[dst].BackgroundImage = SelectPiece(pieceMoving.AccessibleName);
-                theBoard.Controls[dst].AccessibleName = pieceMoving.AccessibleName;
-                theBoard.Controls[src].BackgroundImage = blank;
-                theBoard.Controls[src].AccessibleName = "";
-                theBoard.Controls[src].Refresh();
-              }
-              else
-              {
-                theBoard.Controls[dst].BackgroundImage = SelectPiece(theBoard.Controls[touchSource].AccessibleName);
-                theBoard.Controls[dst].AccessibleName = theBoard.Controls[touchSource].AccessibleName;
-                theBoard.Controls[touchSource].BackgroundImage = blank;
-                theBoard.Controls[touchSource].AccessibleName = "";
-                theBoard.Controls[touchSource].Refresh();
-              }
-              theBoard.Controls[dst].Refresh();
+              InvalidMoveMade();
+              ResetPieces(fenNotation.Text);
+              moveStatus.Text = "Moves off board not allowed, " + (whitesMove ? "whites move." : "blacks move.");
               ClearPieceMoving();
-              //defaults to white, adjustable in edit menu
-              fenNotation.Text = ToFEN(!positionSeupAsWhitesMove);
               touchSource = "";
               return;
             }
@@ -5321,26 +5632,17 @@ namespace ChessRocks
           {
             InvalidMoveMade();
             ResetPieces(fenNotation.Text);
-            moveStatus.Text = "Moves off board not allowed, " + (whitesMove ? "whites move." : "blacks move.");
+            moveStatus.Text = "Manual moves not allowed, " + (whitesMove ? "whites move." : "blacks move.");
             ClearPieceMoving();
             touchSource = "";
-            return;
           }
         }
         else
         {
-          InvalidMoveMade();
-          ResetPieces(fenNotation.Text);
-          moveStatus.Text = "Manual moves not allowed, " + (whitesMove ? "whites move." : "blacks move.");
           ClearPieceMoving();
+          moveStatus.Text = "No piece selected to move, " + (whitesMove ? "whites move." : "blacks move.");
           touchSource = "";
         }
-      }
-      else
-      {
-        ClearPieceMoving();
-        moveStatus.Text = "No piece selected to move, " + (whitesMove ? "whites move." : "blacks move.");
-        touchSource = "";
       }
     }
 
@@ -5449,9 +5751,6 @@ namespace ChessRocks
         computerBlack.Enabled = true;
         moveAnalysis.Checked = true;
       }
-      //else if()
-      //{
-      //}
       moveTree.Focus();
     }
 
@@ -5542,10 +5841,18 @@ namespace ChessRocks
 
         moveTree.Nodes.Clear();
         moveTree.Nodes.Add(new TreeNode("Main"));
-        //        moveTree.Nodes[0].Tag = new Move(fenNotation.Text, fenNotationPlus.Text, 1);
-        moveTree.Nodes[0].Tag = new Move(fenNotation.Text, 1);
+        if (play960.Checked)
+        {
+          moveTree.Nodes[0].Tag = new Move(fenNotation.Text, 1, virtualChessBoard.fenStart);
+        }
+        else
+        {
+          moveTree.Nodes[0].Tag = new Move(fenNotation.Text, 1);
+        }
         moveTree.SelectedNode = moveTree.Nodes[0];
         moveTree.Focus();
+
+        ClearCasualties();
       }
       else
       {
@@ -5564,7 +5871,7 @@ namespace ChessRocks
         DisableEverything();
 
         ChangeButton(ref loadPGN, "Load", "Load a game to Analyze");
-        ChangeButton(ref savePGN, "Save", "Save the game.", pgnLoaded);
+        ChangeButton(ref savePGN, "Save", "Save the game.", true);
         ChangeButton(ref addRAV, "Add RAV", "Add CPU step analysis RAV move sequence.", false);
 
         moveStatus.Text = "Load PGN file to start a move analysis.";
@@ -5608,7 +5915,7 @@ namespace ChessRocks
         DisableEverything();
 
         ChangeButton(ref loadPGN, "Load", "Load a game to Analyze");
-        ChangeButton(ref savePGN, "Save", "Save the game.", pgnLoaded);
+        ChangeButton(ref savePGN, "Save", "Save the game.", true);
         ChangeButton(ref pauseGame, "Start", "Start Analysis of current move list.", pgnLoaded);
         abort.Visible = false;
 
@@ -5645,7 +5952,7 @@ namespace ChessRocks
           computerTimeBlack.Visible = false;
           computerTimeBlackLabel.Visible = false;
           computerBlack.Checked = false;
-          
+
           if (!readyok) StartYourEngine(1);
         }
         else if (!computerBlack.Checked)
@@ -5657,9 +5964,9 @@ namespace ChessRocks
           computerTimeWhite.Visible = true;
           computerTimeWhiteLabel.Visible = true;
           computerTimeBlack.Visible = false;
-          computerTimeBlackLabel.Visible = false; 
+          computerTimeBlackLabel.Visible = false;
           computerWhite.Checked = true;
-          
+
           if (!readyok) StartYourEngine(1);
         }
         else
@@ -5672,7 +5979,7 @@ namespace ChessRocks
           computerTimeWhiteLabel.Visible = false;
           computerTimeBlack.Visible = true;
           computerTimeBlackLabel.Visible = true;
-          
+
           if (!readyok2) StartYourEngine(2);
         }
 
@@ -5712,7 +6019,7 @@ namespace ChessRocks
       }
       else if (offerSave)
       {
-        if (DialogResult.Yes == MessageBox.Show(message + "\r\nDo you wish to save this game?", title, MessageBoxButtons.YesNo,  MessageBoxIcon.Question))
+        if (DialogResult.Yes == MessageBox.Show(message + "\r\nDo you wish to save this game?", title, MessageBoxButtons.YesNo, MessageBoxIcon.Question))
         {
           SaveTheGame();
           SavePGNFile();
@@ -5877,7 +6184,7 @@ namespace ChessRocks
       int xStart = 15;
       int yStart = 15;
       int pixelsPerX = (pawnValues.Width - 3 * xStart) / rows;
-      
+
       if (pixelsPerX < 5) pixelsPerX = 5;
       if (pixelsPerX > 5) pixelsPerX = 5;
 
@@ -5986,11 +6293,11 @@ namespace ChessRocks
 
         int pixelsPerY = Convert.ToInt32((centiPawn.Size.Height - 2 * yStart) / (maxValue - minValue));
         int center = yStart + Convert.ToInt32(pixelsPerY * maxValue);
-        
+
         Rectangle rect = new Rectangle(0, 0, 2, 2);
 
         gfx.DrawLine(myPen, xStart, center, xStart + pixelsPerX * rows + 4, center);
-        gfx.DrawLine(myPen, xStart + pixelsPerX * rows, yStart-5, xStart + pixelsPerX * rows, centiPawn.Height - yStart + 5);
+        gfx.DrawLine(myPen, xStart + pixelsPerX * rows, yStart - 5, xStart + pixelsPerX * rows, centiPawn.Height - yStart + 5);
         gfx.DrawString("0", myFont, Brushes.Black, 0, center - 6);
         gfx.DrawString(maxValue.ToString(), myFont, Brushes.Black, xStart + pixelsPerX * rows + 10, yStart - 6);
         gfx.DrawString(minValue.ToString(), myFont, Brushes.Black, xStart + pixelsPerX * rows + 10, yStart - 6 + Convert.ToSingle(maxValue - minValue) * pixelsPerY);
@@ -6019,7 +6326,7 @@ namespace ChessRocks
         {
           if (dataArray[row] != missingValue)
           {
-            rect.X = xStart + row * pixelsPerX-1;
+            rect.X = xStart + row * pixelsPerX - 1;
             rect.Y = yStart + Convert.ToInt32((maxValue - dataArray[row]) * pixelsPerY);
 
             if (dataArray[row] == mateValue)
@@ -6130,6 +6437,7 @@ namespace ChessRocks
         else
         {
           MakeNextAnalysisMove();
+          addRAV.Text = "Add CPU RAV";
           addRAV.Visible = true;
         }
       }
@@ -6490,7 +6798,7 @@ namespace ChessRocks
             if (tab.Controls[c].Name.Equals(nextName))
             {
               btn = (Button)tab.Controls[c];
-              btn.AutoSize = true; 
+              btn.AutoSize = true;
               found = true;
               break;
             }
@@ -6743,9 +7051,7 @@ namespace ChessRocks
             reflblTextBox1 = lbl_txt.Location;
           }
         }
-        //else //unimplemented type...
-        //{
-        //}
+        //else unimplemented type...
       }
 
       //adjust button x locations and widths
@@ -6764,7 +7070,7 @@ namespace ChessRocks
           {
             buttonCount = Convert.ToInt32(tab.Controls[c].Name.Replace(nextName, ""));
             tab.Controls[c].Location = new Point(refButton1.X, whiteButton1.Location.Y + (buttonCount - 1) * deltaY);
-            tab.Controls[c].AutoSize = false; 
+            tab.Controls[c].AutoSize = false;
             tab.Controls[c].Width = maxButtonLength;
           }
         }
@@ -6776,7 +7082,6 @@ namespace ChessRocks
       if (shiftValue != 0)
       {
         refNUD1.X += shiftValue;
-        //reflblNUD1.X += shiftValue;
         reflblNUD1.X = refNUD1.X + whiteNumericUpDown1.Width + 5;
         nextName = color + "NumericUpDown";
         nextNameLabel = color + "Spin";
@@ -6884,7 +7189,7 @@ namespace ChessRocks
     {
       chess.PutINIValue(engine, "Default", header);
       chess.PutINIValue(engine, header, "1");
-     
+
       for (int i = 0; i < list.Items.Count; i++)
       {
         chess.PutINIValue(header, "OPTION_" + (i + 1).ToString(), list.Items[i].ToString());
@@ -6895,15 +7200,15 @@ namespace ChessRocks
     private void LoadSettings(string header, ref ComboBox list)
     {
       list.Items.Clear();
-      
+
       string option = "";
 
       for (int i = 0; true; i++)
       {
         chess.GetINIValue(header, "OPTION_" + (i + 1).ToString(), ref option, "no_more", true);
-        if(option.ToLower().Equals("no_more")) break;
+        if (option.ToLower().Equals("no_more")) break;
 
-        if (i == 0) list.Items.Clear(); 
+        if (i == 0) list.Items.Clear();
         list.Items.Add(option);
       }
       list.SelectedIndex = 0;
@@ -6984,7 +7289,7 @@ namespace ChessRocks
       getHeader gh = new getHeader(chess, savedSettingsW.Text);
 
       gh.ShowDialog();
-      
+
       if (gh.result == DialogResult.OK)
       {
         SaveSettings(whiteEXE, gh.headerString, ref engineOptionList);
@@ -7074,7 +7379,7 @@ namespace ChessRocks
       }
     }
 
-   //*******************************************************************************************************
+    //*******************************************************************************************************
     private void LoadLogo(ref PictureBox pic, ref PictureBox picBig, string engpath, ref string engineEXE)
     {
       //does this engine have a logo with it?
@@ -7098,18 +7403,23 @@ namespace ChessRocks
         pic.BackgroundImage = ResizeImage(new Bitmap(path + "\\logo.jpg"), pic.Size.Width, pic.Size.Height);
         picBig.BackgroundImage = ResizeImage(new Bitmap(path + "\\logo.jpg"), picBig.Size.Width, picBig.Size.Height);
       }
-      else if(File.Exists(resourcesPath + "\\uci.bmp"))
+      else if (File.Exists(resourcesPath + "\\uci.bmp"))
       {
         pic.BackgroundImage = ResizeImage(new Bitmap(resourcesPath + "\\uci.bmp"), pic.Size.Width, pic.Size.Height);
         picBig.BackgroundImage = ResizeImage(new Bitmap(resourcesPath + "\\uci.bmp"), picBig.Size.Width, picBig.Size.Height);
       }
-      else
+      else if (blank != null)
       {
         pic.BackgroundImage = ResizeImage(blank, pic.Size.Width, pic.Size.Height);
         picBig.BackgroundImage = ResizeImage(blank, picBig.Size.Width, picBig.Size.Height);
       }
+      else
+      {
+        pic.BackgroundImage = ResizeImage(new Bitmap(pic.Size.Width, pic.Size.Height), pic.Size.Width, pic.Size.Height);
+        picBig.BackgroundImage = ResizeImage(new Bitmap(picBig.Size.Width, picBig.Size.Height), picBig.Size.Width, picBig.Size.Height);
+      }
     }
-        
+
     //*******************************************************************************************************
     private bool ChangeWhiteEngine(bool menu)
     {
@@ -7215,7 +7525,7 @@ namespace ChessRocks
         computerTimeWhiteLabel.Visible = false;
         wLogo.Visible = false;
         wLogoBig.Visible = false;
-        
+
         if (moveAnalysis.Checked || gameAnalysis.Checked)
         {
           //only one engine can be running
@@ -7263,7 +7573,7 @@ namespace ChessRocks
         computerTimeBlackLabel.Visible = false;
         kLogo.Visible = false;
         kLogoBig.Visible = false;
-        
+
         if (moveAnalysis.Checked || gameAnalysis.Checked)
         {
           //only one engine can be running
@@ -7273,7 +7583,7 @@ namespace ChessRocks
         {
           clearEngineOutput.Visible = computerWhite.Checked;
           timeLabel.Visible = computerWhite.Checked;
-          
+
           //???
           computerClock.Visible = computerWhite.Checked;
         }
@@ -7305,7 +7615,7 @@ namespace ChessRocks
       int rowsToProcess = moveTree.SelectedNode.Parent.Nodes.Count;
       //assuming 2 analysis per move ~75% of the time - best move and then original move
       //~25% of the time only the best move will be calculated - if it matches actual move no additional analysis is needed
-      
+
       //additional analysis of RAV's created requested...
       int addPositionsToProcess = 0;
       if (evaluateRAV.Checked)
@@ -7694,7 +8004,6 @@ namespace ChessRocks
               if (s.Length > 0)
               {
                 pv = s;
-                //pv = s.Replace("x", "");
                 pvDone = true;
                 pvNext = false;
               }
@@ -8602,23 +8911,11 @@ namespace ChessRocks
         timeLabel.Visible = true;
         computerClock.Visible = true;
 
-        //computerTimeWhite.Visible = true;
-        //computerTimeWhiteLabel.Visible = true;
-        //computerTimeBlack.Visible = true;
-        //computerTimeBlackLabel.Visible = true;
-
         if (computerWhite.Checked)
         {
           if (engine == 1)
           {
             ready.Visible = false;
-            //resuming a game???
-            //whiteDraw.Visible = true;
-
-            //if (!computerBlack.Checked)
-            //{
-            //  blackDraw.Visible = true;
-            //}
           }
         }
 
@@ -8627,13 +8924,6 @@ namespace ChessRocks
           if (engine == 2)
           {
             ready2.Visible = false;
-            //resuming a game???
-            //blackDraw.Visible = true;
-
-            //if (!computerWhite.Checked)
-            //{
-            //  whiteDraw.Visible = true;
-            //}
           }
         }
 
@@ -8892,7 +9182,6 @@ namespace ChessRocks
             startingMoveMade = true;
             WriteSIOfEngine("position fen " + fenNotation.Text, 1);
             WriteSIOfEngine("go infinite", 1);
-            //WriteSIOfEngine("go wtime 2000", 1);
             ResetComputerClock(true);
           }
           else if (whitesMove && computerWhite.Checked)
@@ -9201,8 +9490,11 @@ namespace ChessRocks
         if (resumingGame)
         {
           //make sure we are at the end of the game...
-          moveTree.SelectedNode = moveTree.Nodes[0].LastNode;
-          whitesMove = !((Move)(moveTree.SelectedNode.Tag)).whitesMove;
+          if (moveTree.Nodes[0].LastNode != null)
+          {
+            moveTree.SelectedNode = moveTree.Nodes[0].LastNode;
+            whitesMove = !((Move)(moveTree.SelectedNode.Tag)).whitesMove;
+          }
         }
 
         bestMove.Text = "";
@@ -9241,17 +9533,11 @@ namespace ChessRocks
         {
           if (computerWhite.Checked)
           {
-            //computerTimeWhite.Visible = true;
-            //computerTimeWhiteLabel.Visible = true;
-            
             ChangeButton(ref ready, "Move", "???", false);
           }
 
           if (computerBlack.Checked)
           {
-            //computerTimeBlack.Visible = true;
-            //computerTimeBlackLabel.Visible = true;
-
             ChangeButton(ref ready2, "Move", "???", true);
 
             WriteSIOfEngine("position fen " + fenNotation.Text, 2);
@@ -9263,7 +9549,7 @@ namespace ChessRocks
           computerAnalysisResult.Visible = false;
           timeLabel.Visible = true;
           computerClock.Visible = true;
-          
+
           runCPUClock = true;
         }
         else
@@ -9312,7 +9598,7 @@ namespace ChessRocks
           runClock = true;
           pauseGame.Text = "Pause";
         }
-        
+
         if (play.Checked && (computerWhite.Checked || computerBlack.Checked)) runCPUClock = true;
       }
       else if (whiteDraw.Text.Equals("Offer"))
@@ -9337,8 +9623,11 @@ namespace ChessRocks
         if (resumingGame)
         {
           //make sure we are at the end of the game...
-          moveTree.SelectedNode = moveTree.Nodes[0].LastNode;
-          whitesMove = !((Move)(moveTree.SelectedNode.Tag)).whitesMove;
+          if (moveTree.Nodes[0].LastNode != null)
+          {
+            moveTree.SelectedNode = moveTree.Nodes[0].LastNode;
+            whitesMove = !((Move)(moveTree.SelectedNode.Tag)).whitesMove;
+          }
         }
         else whitesMove = true;
 
@@ -9382,21 +9671,14 @@ namespace ChessRocks
 
           if (computerWhite.Checked)
           {
-            //computerTimeWhite.Visible = true;
-            //computerTimeWhiteLabel.Visible = true;
-
             ChangeButton(ref ready, "Move", "???", true);
 
             WriteSIOfEngine("position fen " + fenNotation.Text, 1);
             WriteSIOfEngine("go infinite", 1);
-            //WriteSIOfEngine("go wtime 2000", 1);
           }
 
           if (computerBlack.Checked)
           {
-            //computerTimeBlack.Visible = true;
-            //computerTimeBlackLabel.Visible = true;
-
             ChangeButton(ref ready2, "Move", "???", false);
           }
 
@@ -9451,7 +9733,7 @@ namespace ChessRocks
           runClock = true;
           pauseGame.Text = "Pause";
         }
-       
+
         if (play.Checked && (computerWhite.Checked || computerBlack.Checked)) runCPUClock = true;
       }
       else if (blackDraw.Text.Equals("Offer"))
@@ -9478,7 +9760,14 @@ namespace ChessRocks
     {
       if (positionSetup.Checked)
       {
-        moveTree.Nodes[0].Tag = new Move(fenNotation.Text, 1);
+        if (play960.Checked)
+        {
+          moveTree.Nodes[0].Tag = new Move(fenNotation.Text, 1, virtualChessBoard.fenStart);
+        }
+        else
+        {
+          moveTree.Nodes[0].Tag = new Move(fenNotation.Text, 1);
+        }
       }
     }
 
@@ -9491,8 +9780,12 @@ namespace ChessRocks
     //*******************************************************************************************************
     protected void removePieceToolStripMenuItem1_Click(object sender, EventArgs e)
     {
-      theBoard.Controls[onPanel].AccessibleName = "";
-      theBoard.Controls[onPanel].BackgroundImage = blank;
+      if (!theBoard.Controls[onPanel].AccessibleName.EndsWith("King"))
+      {
+        theBoard.Controls[onPanel].AccessibleName = "";
+        theBoard.Controls[onPanel].BackgroundImage = blank;
+      }
+
       fenNotation.Text = ToFEN(true);
     }
 
@@ -9601,7 +9894,7 @@ namespace ChessRocks
     //*******************************************************************************************************
     protected void clearBoardToolStripMenuItem1_Click(object sender, EventArgs e)
     {
-      fenNotation.Text = "8/8/8/8/8/8/8/8 w - - 0 1";
+      fenNotation.Text = "4k3/8/8/8/8/8/8/4K3 w - - 0 1";
       duplicateFENs.Text = "1";
       ResetPieces(fenNotation.Text);
     }
@@ -10266,6 +10559,280 @@ namespace ChessRocks
     }
 
     #endregion
+
+    private void white3_Click(object sender, EventArgs e)
+    {
+      if (positionSetup.Checked)
+      {
+        pieceMoving.AccessibleName = "wQueen";
+      }
+    }
+
+    private void white5_Click(object sender, EventArgs e)
+    {
+      if (positionSetup.Checked)
+      {
+        pieceMoving.AccessibleName = "wRook";
+      }
+    }
+
+    private void white7_Click(object sender, EventArgs e)
+    {
+      if (positionSetup.Checked)
+      {
+        pieceMoving.AccessibleName = "wBishop";
+      }
+    }
+
+    private void white9_Click(object sender, EventArgs e)
+    {
+      if (positionSetup.Checked)
+      {
+        pieceMoving.AccessibleName = "wKnight";
+      }
+    }
+
+    private void white11_Click(object sender, EventArgs e)
+    {
+      if (positionSetup.Checked)
+      {
+        pieceMoving.AccessibleName = "wPawn";
+      }
+    }
+
+    private void black3_Click(object sender, EventArgs e)
+    {
+      if (positionSetup.Checked)
+      {
+        pieceMoving.AccessibleName = "kQueen";
+      }
+    }
+
+    private void black5_Click(object sender, EventArgs e)
+    {
+      if (positionSetup.Checked)
+      {
+        pieceMoving.AccessibleName = "kRook";
+      }
+    }
+
+    private void black7_Click(object sender, EventArgs e)
+    {
+      if (positionSetup.Checked)
+      {
+        pieceMoving.AccessibleName = "kBishop";
+      }
+    }
+
+    private void black9_Click(object sender, EventArgs e)
+    {
+      if (positionSetup.Checked)
+      {
+        pieceMoving.AccessibleName = "kKnight";
+      }
+    }
+
+    private void black11_Click(object sender, EventArgs e)
+    {
+      if (positionSetup.Checked)
+      {
+        pieceMoving.AccessibleName = "kPawn";
+      }
+    }
+
+    private void play960_CheckedChanged(object sender, EventArgs e)
+    {
+      if (play960.Checked)
+      {
+        //960 starting position setup
+        //mirror the white back row pieces to be the same as the black back row pieces
+        //set up the black backrow pieces.
+        //randomly place king in one of 6 possible positions, a and h files are not allowed.
+        //randomly place each rook on either side of the king.
+        //each rook will have from one to 6 possible positions.
+        //randomly place a bishop on any of the 5 remaining positions.
+        //randomly place the other bishop on one of the 4 remaining positions that is an opposite color square as the previous bishop was placed.
+        //randomly place the 2 knights and queen onto the 3 remaing squares.
+
+        //normalFenStart = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        string f1 = "01234567";
+        string f2 = "/pppppppp/8/8/8/8/PPPPPPPP/01234567 w KQkq - ";
+        string f3 = "0 1";
+
+        int king = rndnum.Next(1, 7);
+        f1 = f1.Replace(king.ToString(), "k");
+        f2 = f2.Replace(king.ToString(), "K");
+        
+        int rookLeft = rndnum.Next(king);
+        f1 = f1.Replace(rookLeft.ToString(), "r");
+        f2 = f2.Replace(rookLeft.ToString(), "R");
+        
+        int rookRight = rndnum.Next(king + 1, 8);
+        f1 = f1.Replace(rookRight.ToString(), "r");
+        f2 = f2.Replace(rookRight.ToString(), "R");
+
+        int bishop = rndnum.Next(5);//any of the remaining 5 locations
+        int currentFreePosition = 0;
+        int currentFreeIndex = 0;
+        foreach (char c in f1)
+        {
+          if (c != 'k' && c != 'r')
+          {
+            if (currentFreePosition == bishop)
+            {
+              f1 = f1.Replace(currentFreeIndex.ToString(), "b");
+              f2 = f2.Replace(currentFreeIndex.ToString(), "B");
+              bishop = currentFreeIndex;
+              break;
+            }
+            currentFreePosition++;
+          }
+          currentFreeIndex++;
+        }
+
+        bool bishopIsOnWhite = ((currentFreeIndex % 2) == 0);
+        currentFreeIndex = 0;
+        int bishop2PossibleLocations = 0;
+        foreach (char c in f1)
+        {
+          if ((bishopIsOnWhite && ((currentFreeIndex % 2) != 0)) ||
+             (!bishopIsOnWhite && ((currentFreeIndex % 2) == 0)))
+          {
+            if (c != 'k' && c != 'r' && c != 'b')
+            {
+              bishop2PossibleLocations++;
+            }
+          }
+          currentFreeIndex++;
+        }
+
+        int bishop2 = rndnum.Next(bishop2PossibleLocations);//any of the remaining opposite color positions
+        currentFreeIndex = 0;
+        bishop2PossibleLocations = 0;
+        foreach (char c in f1)
+        {
+          if ((bishopIsOnWhite && ((currentFreeIndex % 2) != 0)) ||
+             (!bishopIsOnWhite && ((currentFreeIndex % 2) == 0)))
+          {
+            if (c != 'k' && c != 'r' && c != 'b')
+            {
+              if (bishop2PossibleLocations == bishop2)
+              {
+                f1 = f1.Replace(currentFreeIndex.ToString(), "b");
+                f2 = f2.Replace(currentFreeIndex.ToString(), "B");
+                bishop2 = currentFreeIndex;
+                break;
+              }
+              bishop2PossibleLocations++;
+            }
+          }
+          currentFreeIndex++;
+        }
+
+        //what is left are the knights and queen - 3 possibilities
+        // nnq, nqn or qnn
+        int remaining = rndnum.Next(3);
+
+        currentFreeIndex = 0;
+        foreach (char c in f1)
+        {
+          if (c != 'k' && c != 'r' && c != 'b')
+          {
+            if (remaining < 2)
+            {
+              //the first empty spot is a knight
+              f1 = f1.Replace(currentFreeIndex.ToString(), "n");
+              f2 = f2.Replace(currentFreeIndex.ToString(), "N");
+            }
+            else
+            {
+              //the first empty spot is a queen
+              f1 = f1.Replace(currentFreeIndex.ToString(), "q");
+              f2 = f2.Replace(currentFreeIndex.ToString(), "Q");
+            }
+            break;
+          }
+          currentFreeIndex++;
+        }
+ 
+        if (remaining == 2)
+        {
+          //all the remaining spots are knights
+          currentFreeIndex = 0;
+          foreach (char c in f1)
+          {
+            if (c != 'k' && c != 'r' && c != 'b' && c != 'q')
+            {
+              f1 = f1.Replace(currentFreeIndex.ToString(), "n");
+              f2 = f2.Replace(currentFreeIndex.ToString(), "N");
+            }
+            currentFreeIndex++;
+          }
+        }
+        else if (remaining == 1)
+        {
+          //the first empty spot is a queen
+          currentFreeIndex = 0;
+          foreach (char c in f1)
+          {
+            if (c != 'k' && c != 'r' && c != 'b' && c != 'n')
+            {
+              f1 = f1.Replace(currentFreeIndex.ToString(), "q");
+              f2 = f2.Replace(currentFreeIndex.ToString(), "Q");
+              break;
+            }
+            currentFreeIndex++;
+          }
+          //the last spot is a knight
+          currentFreeIndex = 0;
+          foreach (char c in f1)
+          {
+            if (c != 'k' && c != 'r' && c != 'b' && c != 'q' && c != 'n')
+            {
+              f1 = f1.Replace(currentFreeIndex.ToString(), "n");
+              f2 = f2.Replace(currentFreeIndex.ToString(), "N");
+            }
+            currentFreeIndex++;
+          }
+        }
+        else
+        {
+          //the next empty spot is a knight
+          currentFreeIndex = 0;
+          foreach (char c in f1)
+          {
+            if (c != 'k' && c != 'r' && c != 'b' && c != 'q' && c != 'n')
+            {
+              f1 = f1.Replace(currentFreeIndex.ToString(), "n");
+              f2 = f2.Replace(currentFreeIndex.ToString(), "N");
+              break;
+            }
+            currentFreeIndex++;
+          }
+          //the last empty spot is a queen
+          currentFreeIndex = 0;
+          foreach (char c in f1)
+          {
+            if (c != 'k' && c != 'r' && c != 'b' && c != 'n')
+            {
+              f1 = f1.Replace(currentFreeIndex.ToString(), "q");
+              f2 = f2.Replace(currentFreeIndex.ToString(), "Q");
+            }
+            currentFreeIndex++;
+          }
+        }
+
+        starting960Fen = f1 + f2 + f3;
+        virtualChessBoard = new Chess(starting960Fen);
+      }
+      else
+      {
+        starting960Fen = "";
+        virtualChessBoard = new Chess();
+      }
+      fenNotation.Text = virtualChessBoard.fenStart;
+      SetupForNextLiveGame();
+    }
 
   }
 }

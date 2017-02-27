@@ -53,5 +53,25 @@ namespace ChessRocks
     {
       loadAll = true;
     }
+
+    private void cancel_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void findStr_TextChanged(object sender, EventArgs e)
+    {
+
+    }
+
+    private void ok_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void GameList_Load(object sender, EventArgs e)
+    {
+
+    }
   }
 }

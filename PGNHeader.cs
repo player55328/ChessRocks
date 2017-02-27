@@ -73,13 +73,13 @@ namespace ns_PGNHeader
         else if (GetValue(line, ref Annotator)) continue;
         else if (GetValue(line, ref Mode)) continue;
         else if (GetValue(line, ref PlyCount)) continue;
+        else if (GetValue(line, ref Variant)) continue;
+        else if (GetValue(line, ref CurrentPosition)) continue;
 
         else if (GetValue(line, ref custom1)) continue;
         else if (GetValue(line, ref custom2)) continue;
         else if (GetValue(line, ref custom3)) continue;
         else if (GetValue(line, ref custom4)) continue;
-        else if (GetValue(line, ref custom5)) continue;
-        else if (GetValue(line, ref custom6)) continue;
 
         else if (line.StartsWith("["))
         {
@@ -204,6 +204,7 @@ namespace ns_PGNHeader
       if (SubVariation.Text.Length > 0) newTags += ("[SubVariation \"" + SubVariation.Text + "\"]\r\n");
       if (ECO.Text.Length > 0) newTags += ("[ECO \"" + ECO.Text + "\"]\r\n");
       if (NIC.Text.Length > 0) newTags += ("[NIC \"" + NIC.Text + "\"]\r\n");
+      if (Variant.Text.Length > 0) newTags += ("[Variant \"" + Variant.Text + "\"]\r\n");
 
       if (Time.Text.Length > 0) newTags += ("[Time \"" + Time.Text + "\"]\r\n");
       if (UTCTime.Text.Length > 0) newTags += ("[UTCTime \"" + UTCTime.Text + "\"]\r\n");
@@ -229,13 +230,13 @@ namespace ns_PGNHeader
       if (Annotator.Text.Length > 0) newTags += ("[Annotator \"" + Annotator.Text + "\"]\r\n");
       if (Mode.Text.Length > 0) newTags += ("[Mode \"" + Mode.Text + "\"]\r\n");
       if (PlyCount.Text.Length > 0) newTags += ("[PlyCount \"" + PlyCount.Text + "\"]\r\n");
+      if (CurrentPosition.Text.Length > 0) newTags += ("[PlyCount \"" + CurrentPosition.Text + "\"]\r\n");
 
       if ((customTag1.Text.Length > 0) && (custom1.Text.Length > 0)) newTags += ("[" + customTag1.Text + " \"" + custom1.Text + "\"]\r\n");
       if ((customTag2.Text.Length > 0) && (custom2.Text.Length > 0)) newTags += ("[" + customTag2.Text + " \"" + custom2.Text + "\"]\r\n");
+      if ((customTag3.Text.Length > 0) && (custom3.Text.Length > 0)) newTags += ("[" + customTag3.Text + " \"" + custom3.Text + "\"]\r\n");
       if ((customTag4.Text.Length > 0) && (custom4.Text.Length > 0)) newTags += ("[" + customTag4.Text + " \"" + custom4.Text + "\"]\r\n");
-      if ((customTag5.Text.Length > 0) && (custom5.Text.Length > 0)) newTags += ("[" + customTag5.Text + " \"" + custom5.Text + "\"]\r\n");
-      if ((customTag6.Text.Length > 0) && (custom6.Text.Length > 0)) newTags += ("[" + customTag6.Text + " \"" + custom6.Text + "\"]\r\n");
-
+      
       newTags += unknownTags.Text;
 
       string[] separator = new string[] { "\r\n" };

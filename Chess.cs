@@ -21,7 +21,9 @@ namespace ChessRocks
 
     protected string lastFEN = "";
 
-    public readonly string fenStart = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    private string normalFenStart = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    public readonly string fenStart;
+    public readonly bool validStartingFen = true;
 
     protected string pawnTarget = "";
     protected string currentMoveList = "";
@@ -29,12 +31,13 @@ namespace ChessRocks
     protected string lanList = "";
     protected string[] fields = new string[14];
 
-    protected readonly string[,] boardLayout;
-    protected string[,] piecePositions;
-    protected readonly string[,] positionColor;
+    protected readonly string[,] boardLayout = new string[8, 8];
+    protected string[,] piecePositions = new string[8, 8];
+    protected readonly string[,] positionColor = new string[8, 8];
 
     protected char[] spaceDelim = " ".ToCharArray();
     protected char[] delimiter = " /".ToCharArray();
+    protected char[] commentDelim = "{".ToCharArray();
 
     protected bool whitesMove = true;
     protected bool wCastleQ, wCastleK, kCastleQ, kCastleK;
@@ -52,6 +55,7 @@ namespace ChessRocks
     protected bool A_very_poor_move = false;
     protected bool A_speculative_move = false;
     protected bool A_questionable_move = false;
+    protected bool chess960 = false;
 
     public readonly Point[] allowedMovesKing = new Point[8];
     //public readonly Point[] allowedMovesQueen = new Point[56]; - equivalent to rook and bishop moves combined
@@ -67,14 +71,46 @@ namespace ChessRocks
     protected ArrayList Moves = new ArrayList();
     Chess quietList;
 
+    private bool validMove = true;
+
     #endregion
 
     #region constructor
 
     public Chess()
     {
+      ResetBoard();
+
+      fenStart = normalFenStart;
+    }
+
+    public Chess(string starting960Fen)
+    {
+      ResetBoard();
+
+      validStartingFen = ValidStarting960Fen(starting960Fen);
+
+      if(validStartingFen)
+      {
+        chess960 = true;
+        fenStart = starting960Fen;
+      }
+      else
+      {
+        fenStart = normalFenStart;
+      }
+    }
+
+    protected bool ValidStarting960Fen(string starting960Fen)
+    {
+      return true;
+    }
+
+    public void ResetBoard()
+    {
       //all moves conditional as far as not taking you off the 8x8 board
-      //condition that he not be put into check
+      
+      //king conditional that he not be put into check
       allowedMovesKing[0] = new Point(1, 1);
       allowedMovesKing[1] = new Point(0, 1);
       allowedMovesKing[2] = new Point(1, 0);
@@ -151,8 +187,6 @@ namespace ChessRocks
       allowedMovesRook[26] = new Point(0, 6);
       allowedMovesRook[27] = new Point(0, 7);
 
-      boardLayout = new string[8, 8];
-
       // X, Y
       // File, (7-Rank)
       boardLayout[0, 0] = "a8";
@@ -227,9 +261,6 @@ namespace ChessRocks
       boardLayout[7, 6] = "h2";
       boardLayout[7, 7] = "h1";
 
-      positionColor = new string[8, 8];
-      piecePositions = new string[8, 8];
-
       for (int X = 0; X < 8; X++)
       {
         for (int Y = 0; Y < 8; Y++)
@@ -262,11 +293,47 @@ namespace ChessRocks
     // fen from the previous move!
     public ArrayList LoadList(string movelist, string fen, bool san, string preMove1Comment)
     {
+      //nested comments are still not supported...
+      int i, cmnt_end;
+      string cmnt, tmpMoveList = movelist;
+      string [] cmnts;
+      bool CommentModified = false;
+
+      //remove RAV delimeters from the comments - it breaks my simplistic way of dealing with nested RAVS
+      cmnts = tmpMoveList.Split(commentDelim);
+
+      for (i = 0; i < cmnts.Length; i++)
+      {
+        cmnt_end = cmnts[i].IndexOf("}");
+        
+        if (cmnt_end >= 0)
+        {
+          //this is the start of a comment
+          cmnt = cmnts[i].Substring(0, cmnt_end);
+          CommentModified |= (cmnt.IndexOf('(') >= 0);
+          CommentModified |= (cmnt.IndexOf(')') >= 0);
+          cmnt = cmnt.Replace('(', '[');
+          cmnt = cmnt.Replace(')', ']');
+          cmnts[i] = "{" + cmnt + cmnts[i].Substring(cmnt_end);
+        }
+      }
+
+      if(CommentModified)
+      {
+        tmpMoveList = "";
+        for (i = 0; i < cmnts.Length; i++)
+        {
+          tmpMoveList += cmnts[i];
+        }
+        movelist = tmpMoveList;
+        MessageBox.Show("RAV delimiter(s) replaced in comment(s)...");
+      }
+
       bool result = true;
 
       mainPlycount = 0;
 
-      move = new Move(fen, 1);
+      move = new Move(fen, 1, fenStart);
 
       //this sets the fullMove value
       ResetPieces(fen);
@@ -295,7 +362,7 @@ namespace ChessRocks
       string tmp;
       bool commentMode = false;
 
-      int i = 0;
+      i = 0;
 
       foreach (string tag in movelist.Split(spaceDelim))
       {
@@ -682,7 +749,7 @@ namespace ChessRocks
         pgn += "+";
       }
 
-      move = new Move(lastFEN, tmpFullMove);
+      move = new Move(lastFEN, tmpFullMove, fenStart);
       move.san = pgn;
       move.lan = longA;
       move.gameOver = gameOver;
@@ -967,7 +1034,7 @@ namespace ChessRocks
     protected bool ToLAN(int moveNum, ref string san, ref string lan, bool whiteMove)
     {
       string dst, src, src2, promotedTo, original;
-      bool validMove = true;
+      validMove = true;
 
       try
       {
@@ -982,12 +1049,14 @@ namespace ChessRocks
       Point p2 = new Point();
       Point p3 = new Point();
 
+      //debug
+      //if(san.Equals("Rd1")) MessageBox.Show(moveNum.ToString() + ". " + (whiteMove ? "" : "... ") + san);
+      
       if (IsACastle(ref san))
       {
         if (!Castle(moveNum, san, whiteMove))
         {
           InvalidMove(moveNum, whiteMove, san);
-          validMove = false;
           san = san.Replace('-', '?');
           lan = san;
         }
@@ -1117,7 +1186,6 @@ namespace ChessRocks
               {
                 lan = src + dst + "?";
                 InvalidMove(moveNum, whiteMove, lan);
-                validMove = false;
               }
             }
             else
@@ -1144,7 +1212,6 @@ namespace ChessRocks
               {
                 lan = src + dst + "?";
                 InvalidMove(moveNum, whiteMove, lan);
-                validMove = false;
               }
             }
           }
@@ -1153,7 +1220,6 @@ namespace ChessRocks
             //no piece on destination square to kill
             lan = src + dst + "?";
             InvalidMove(moveNum, whiteMove, lan);
-            validMove = false;
           }
           else if (src.IndexOf("B") == 0)
           {
@@ -1167,7 +1233,6 @@ namespace ChessRocks
             else
             {
               InvalidMove(moveNum, whiteMove, san);
-              validMove = false;
             }
           }
           else if (src.IndexOf("R") == 0)
@@ -1182,7 +1247,6 @@ namespace ChessRocks
             else
             {
               InvalidMove(moveNum, whiteMove, san);
-              validMove = false;
             }
           }
           else if (src.IndexOf("Q") == 0)
@@ -1197,7 +1261,6 @@ namespace ChessRocks
             else
             {
               InvalidMove(moveNum, whiteMove, san);
-              validMove = false;
             }
           }
           else if (src.IndexOf("N") == 0)
@@ -1212,7 +1275,6 @@ namespace ChessRocks
             else
             {
               InvalidMove(moveNum, whiteMove, san);
-              validMove = false;
             }
           }
           else if (src.IndexOf("K") == 0)
@@ -1226,7 +1288,6 @@ namespace ChessRocks
             {
               lan = src + dst + "?";
               InvalidMove(moveNum, whiteMove, lan);
-              validMove = false;
             }
           }
           pawnTarget = "";
@@ -1283,7 +1344,6 @@ namespace ChessRocks
                 //there is already a piece sitting on the destination square
                 lan = src + dst + "?";
                 InvalidMove(moveNum, whiteMove, lan);
-                validMove = false;
               }
               //make sure there is a white pawn there
               else if (piecePositions[p1.X, p1.Y].Equals("wPawn"))
@@ -1301,7 +1361,6 @@ namespace ChessRocks
               {
                 lan = src + dst + "?";
                 InvalidMove(moveNum, whiteMove, lan);
-                validMove = false;
               }
             }
             else
@@ -1317,7 +1376,6 @@ namespace ChessRocks
                 //there is already a piece sitting on the destination square
                 lan = src + dst + "?";
                 InvalidMove(moveNum, whiteMove, lan);
-                validMove = false;
               }
               //make sure there is a black pawn there
               else if (piecePositions[p1.X, p1.Y].Equals("kPawn"))
@@ -1335,7 +1393,6 @@ namespace ChessRocks
               {
                 lan = src + dst + "?";
                 InvalidMove(moveNum, whiteMove, lan);
-                validMove = false;
               }
             }
           }
@@ -1345,7 +1402,6 @@ namespace ChessRocks
             lan = src + dst + "?";
             InvalidMove(moveNum, whiteMove, lan);
             halfMove++;
-            validMove = false;
           }
           else if (src.IndexOf("B") == 0)
           {
@@ -1360,7 +1416,6 @@ namespace ChessRocks
             else
             {
               InvalidMove(moveNum, whiteMove, san);
-              validMove = false;
             }
           }
           else if (src.IndexOf("R") == 0)
@@ -1376,7 +1431,6 @@ namespace ChessRocks
             else
             {
               InvalidMove(moveNum, whiteMove, san);
-              validMove = false;
             }
           }
           else if (src.IndexOf("Q") == 0)
@@ -1392,7 +1446,6 @@ namespace ChessRocks
             else
             {
               InvalidMove(moveNum, whiteMove, san);
-              validMove = false;
             }
           }
           else if (src.IndexOf("N") == 0)
@@ -1408,7 +1461,6 @@ namespace ChessRocks
             else
             {
               InvalidMove(moveNum, whiteMove, san);
-              validMove = false;
             }
           }
           else if (src.IndexOf("K") >= 0)
@@ -1423,7 +1475,6 @@ namespace ChessRocks
             {
               lan = src + dst + "?";
               InvalidMove(moveNum, whiteMove, lan);
-              validMove = false;
             }
           }
         }
@@ -1972,23 +2023,112 @@ namespace ChessRocks
         p1 = FindPosition(src);
         p2 = FindPosition(dst);
 
+        if (src.EndsWith("1") && dst.EndsWith("1") && (wCastleK || wCastleQ))
+        {
+          if (!chess960)
+          {
+            if (src.Equals("h1")) wCastleK = false;
+            else if (src.Equals("a1")) wCastleQ = false;
+            else if (src.Equals("e1")) wCastleK = wCastleQ = false;
+            //else if (src.Equals("h8")) kCastleK = false;
+            //else if (src.Equals("a8")) kCastleQ = false;
+            //else if (src.Equals("e8")) kCastleK = kCastleQ = false;
+            ////else if (dst.Equals("h1")) wCastleK = false;
+            ////else if (dst.Equals("a1")) wCastleQ = false;
+            //else if (dst.Equals("h8")) kCastleK = false;
+            //else if (dst.Equals("a8")) kCastleQ = false;
+          }
+          else
+          {
+            Point[] pts = new Point[8];
+
+            int kingColumn = fenStart.IndexOf("k");
+            int rookColumnLeftBlackQueen = fenStart.IndexOf("r");
+            int rookColumnRightBlackKing = fenStart.IndexOf("r", rookColumnLeftBlackQueen + 1);
+
+            pts[0] = FindPosition("a1");
+            pts[1] = FindPosition("b1");
+            pts[2] = FindPosition("c1");
+            pts[3] = FindPosition("d1");
+            pts[4] = FindPosition("e1");
+            pts[5] = FindPosition("f1");
+            pts[6] = FindPosition("g1");
+            pts[7] = FindPosition("h1");
+
+            if (SquareName(pts[kingColumn].X, pts[kingColumn].Y).Equals(src)) wCastleK = wCastleQ = false;
+            else if (SquareName(pts[rookColumnLeftBlackQueen].X, pts[rookColumnLeftBlackQueen].Y).Equals(src)) wCastleQ = false;
+            else if (SquareName(pts[rookColumnRightBlackKing].X, pts[rookColumnRightBlackKing].Y).Equals(src)) wCastleK = false;
+          }
+        }
+        else if (src.EndsWith("8") && dst.EndsWith("8") && (kCastleK || kCastleQ))
+        {
+          if (!chess960)
+          {
+            //if (src.Equals("h1")) wCastleK = false;
+            //else if (src.Equals("a1")) wCastleQ = false;
+            //else if (src.Equals("e1")) wCastleK = wCastleQ = false;
+            if (src.Equals("h8")) kCastleK = false;
+            else if (src.Equals("a8")) kCastleQ = false;
+            else if (src.Equals("e8")) kCastleK = kCastleQ = false;
+            //else if (dst.Equals("h1")) wCastleK = false;
+            //else if (dst.Equals("a1")) wCastleQ = false;
+            ////else if (dst.Equals("h8")) kCastleK = false;
+            ////else if (dst.Equals("a8")) kCastleQ = false;
+          }
+          else
+          {
+            Point[] pts = new Point[8];
+
+            int kingColumn = fenStart.IndexOf("k");
+            int rookColumnLeftBlackQueen = fenStart.IndexOf("r");
+            int rookColumnRightBlackKing = fenStart.IndexOf("r", rookColumnLeftBlackQueen + 1);
+
+            pts[0] = FindPosition("a8");
+            pts[1] = FindPosition("b8");
+            pts[2] = FindPosition("c8");
+            pts[3] = FindPosition("d8");
+            pts[4] = FindPosition("e8");
+            pts[5] = FindPosition("f8");
+            pts[6] = FindPosition("g8");
+            pts[7] = FindPosition("h8");
+
+            if (SquareName(pts[kingColumn].X, pts[kingColumn].Y).Equals(src)) kCastleK = kCastleQ = false;
+            else if (SquareName(pts[rookColumnLeftBlackQueen].X, pts[rookColumnLeftBlackQueen].Y).Equals(src)) kCastleQ = false;
+            else if (SquareName(pts[rookColumnRightBlackKing].X, pts[rookColumnRightBlackKing].Y).Equals(src)) kCastleK = false;
+          }
+        }
+
         piecePositions[p2.X, p2.Y] = piecePositions[p1.X, p1.Y];
         piecePositions[p1.X, p1.Y] = "";
 
-        if (src.Equals("h1")) wCastleK = false;
-        else if (src.Equals("a1")) wCastleQ = false;
-        else if (src.Equals("e1")) wCastleK = wCastleQ = false;
-        else if (src.Equals("h8")) kCastleK = false;
-        else if (src.Equals("a8")) kCastleQ = false;
-        else if (src.Equals("e8")) kCastleK = kCastleQ = false;
-        else if (dst.Equals("h1")) wCastleK = false;
-        else if (dst.Equals("a1")) wCastleQ = false;
-        else if (dst.Equals("h8")) kCastleK = false;
-        else if (dst.Equals("a8")) kCastleQ = false;
       }
       catch
       {
         MessageBox.Show("MovePiece(src,dst) src = '" + src + "' dst = '" + dst + "'");
+      }
+    }
+
+    //*******************************************************************************************************
+    protected void SwapPieces(string src, string dst)
+    {
+      //the validity of the move should already have been checked
+      try
+      {
+        Point p1 = new Point();
+        Point p2 = new Point();
+
+        p1 = FindPosition(src);
+        p2 = FindPosition(dst);
+
+        string[,] tmp = new string[1, 1];
+
+        tmp[0, 0] = piecePositions[p2.X, p2.Y];
+        piecePositions[p2.X, p2.Y] = piecePositions[p1.X, p1.Y];
+        piecePositions[p1.X, p1.Y] = tmp[0, 0];
+      }
+      catch
+      {
+        MessageBox.Show("SwapPieces(src,dst) src = '" + src + "' dst = '" + dst + "'");
       }
     }
 
@@ -2033,15 +2173,283 @@ namespace ChessRocks
     //*******************************************************************************************************
     protected bool Castle(int moveNum, string pgn, bool whiteMove)
     {
-      Point p1 = new Point();
-      Point p2 = new Point();
-      Point p3 = new Point();
-      Point p4 = new Point();
-      Point p5 = new Point();
-
-      //need to check for checks && empty squares!
-      if (whiteMove)
+      if (chess960)
       {
+        Point[] pts = new Point[8];
+        
+        pts[0] = new Point();
+        pts[1] = new Point();
+        pts[2] = new Point();
+        pts[3] = new Point();
+        pts[4] = new Point();
+        pts[5] = new Point();
+        pts[6] = new Point();
+        pts[7] = new Point();
+
+        int kingColumn = fenStart.IndexOf("k");
+        int rookColumnLeftBlackQueen = fenStart.IndexOf("r");
+        int rookColumnRightBlackKing = fenStart.IndexOf("r", rookColumnLeftBlackQueen + 1);
+
+        //need to check for attacks && empty squares!
+        if (whiteMove)
+        {
+          pts[0] = FindPosition("a1");
+          pts[1] = FindPosition("b1");
+          pts[2] = FindPosition("c1");
+          pts[3] = FindPosition("d1");
+          pts[4] = FindPosition("e1");
+          pts[5] = FindPosition("f1");
+          pts[6] = FindPosition("g1");
+          pts[7] = FindPosition("h1");
+
+          if (pgn.Equals("O-O"))
+          {
+            //kingside
+            if (piecePositions[pts[kingColumn].X, pts[kingColumn].Y].Equals("wKing") &&
+                piecePositions[pts[rookColumnRightBlackKing].X, pts[rookColumnRightBlackKing].Y].Equals("wRook") &&
+               wCastleK)
+            {
+              for (int i = kingColumn; i < 7; i++)
+              {
+                if (UnderAttack(SquareName(pts[i].X, pts[i].Y), !whiteMove)) return false;
+              }
+
+              for (int i = kingColumn + 1; i < 7; i++)
+              {
+                if (piecePositions[pts[i].X, pts[i].Y].Length > 0 && (i != rookColumnRightBlackKing)) return false;
+              }
+
+              if((kingColumn == 5) && (rookColumnRightBlackKing == 6))
+              {
+                //swap positions
+                SwapPieces("f1", "g1");
+                wCastleK = wCastleQ = false;
+              }
+              else if ((kingColumn == 6) && (rookColumnRightBlackKing == 7))
+              {
+                //rook hops king only
+                if (piecePositions[pts[5].X, pts[5].Y].Length > 0) return false;
+                wCastleK = wCastleQ = false;
+                MovePiece("h1", "f1");
+              }
+              else if (rookColumnRightBlackKing == 5)
+              {
+                //king hops rook only
+                wCastleK = wCastleQ = false;
+                MovePiece(SquareName(pts[kingColumn].X, pts[kingColumn].Y), "g1");
+              }
+              else if (rookColumnRightBlackKing == 6)
+              {
+                //king needs to go where the rook is - move rook first
+                MovePiece(SquareName(pts[rookColumnRightBlackKing].X, pts[rookColumnRightBlackKing].Y), "f1");
+                MovePiece(SquareName(pts[kingColumn].X, pts[kingColumn].Y), "g1");
+              }
+              else
+              {
+                //move king first or move order does not matter
+                MovePiece(SquareName(pts[kingColumn].X, pts[kingColumn].Y), "g1");
+                MovePiece(SquareName(pts[rookColumnRightBlackKing].X, pts[rookColumnRightBlackKing].Y), "f1");
+              }
+
+              return true;
+            }
+          }
+          else
+          {
+            //queenside
+            if (piecePositions[pts[kingColumn].X, pts[kingColumn].Y].Equals("wKing") &&
+                piecePositions[pts[rookColumnLeftBlackQueen].X, pts[rookColumnLeftBlackQueen].Y].Equals("wRook") &&
+               wCastleQ)
+            {
+              for (int i = kingColumn; i > 1; i--)
+              {
+                if (UnderAttack(SquareName(pts[i].X, pts[i].Y), !whiteMove)) return false;
+              }
+
+              for (int i = kingColumn - 1; i > 1; i--)
+              {
+                if (piecePositions[pts[i].X, pts[i].Y].Length > 0 && (i != rookColumnLeftBlackQueen)) return false;
+              }
+
+              if ((kingColumn == 3) && (rookColumnLeftBlackQueen == 2))
+              {
+                //swap positions
+                SwapPieces("c1", "d1");
+                wCastleK = wCastleQ = false;
+              }
+              else if ((kingColumn == 2) && (rookColumnLeftBlackQueen == 0))
+              {
+                //rook hops king
+                if (piecePositions[pts[3].X, pts[3].Y].Length > 0) return false;
+                if (piecePositions[pts[1].X, pts[1].Y].Length > 0) return false;
+                wCastleK = wCastleQ = false;
+                MovePiece("a1", "d1");
+              }
+              else if ((kingColumn == 2) && (rookColumnLeftBlackQueen == 1))
+              {
+                //rook hops king
+                if (piecePositions[pts[3].X, pts[3].Y].Length > 0) return false;
+                wCastleK = wCastleQ = false;
+                MovePiece("b1", "d1");
+              }
+              else if (rookColumnLeftBlackQueen == 3)
+              {
+                //king hops rook only
+                wCastleK = wCastleQ = false;
+                MovePiece(SquareName(pts[kingColumn].X, pts[kingColumn].Y), "c1");
+              }
+              else if (rookColumnLeftBlackQueen == 2)
+              {
+                //king needs to go where the rook is - move rook first
+                MovePiece(SquareName(pts[rookColumnLeftBlackQueen].X, pts[rookColumnLeftBlackQueen].Y), "d1");
+                MovePiece(SquareName(pts[kingColumn].X, pts[kingColumn].Y), "c1");
+              }
+              else
+              {
+                //move king first or move order does not matter
+                MovePiece(SquareName(pts[kingColumn].X, pts[kingColumn].Y), "c1");
+                MovePiece(SquareName(pts[rookColumnLeftBlackQueen].X, pts[rookColumnLeftBlackQueen].Y), "d1");
+              }
+
+              return true;
+            }
+          }
+        }
+        else
+        {
+          //black move
+          pts[0] = FindPosition("a8");
+          pts[1] = FindPosition("b8");
+          pts[2] = FindPosition("c8");
+          pts[3] = FindPosition("d8");
+          pts[4] = FindPosition("e8");
+          pts[5] = FindPosition("f8");
+          pts[6] = FindPosition("g8");
+          pts[7] = FindPosition("h8");
+          
+          if (pgn.Equals("O-O"))
+          {
+            //kingside
+            if (piecePositions[pts[kingColumn].X, pts[kingColumn].Y].Equals("kKing") &&
+                piecePositions[pts[rookColumnRightBlackKing].X, pts[rookColumnRightBlackKing].Y].Equals("kRook") &&
+               kCastleK)
+            {
+              for (int i = kingColumn; i < 7; i++)
+              {
+                if (UnderAttack(SquareName(pts[i].X, pts[i].Y), !whiteMove)) return false;
+              }
+
+              for (int i = kingColumn + 1; i < 7; i++)
+              {
+                if (piecePositions[pts[i].X, pts[i].Y].Length > 0 && (i != rookColumnRightBlackKing)) return false;
+              }
+
+              if ((kingColumn == 5) && (rookColumnRightBlackKing == 6))
+              {
+                //swap positions
+                SwapPieces("f8", "g8");
+                kCastleK = kCastleQ = false;
+              }
+              else if ((kingColumn == 6) && (rookColumnRightBlackKing == 7))
+              {
+                //rook hops king only
+                if (piecePositions[pts[5].X, pts[5].Y].Length > 0) return false;
+                kCastleK = kCastleQ = false;
+                MovePiece("h8", "f8");
+              }
+              else if (rookColumnRightBlackKing == 5)
+              {
+                //king hops rook only
+                kCastleK = kCastleQ = false;
+                MovePiece(SquareName(pts[kingColumn].X, pts[kingColumn].Y), "g8");
+              }
+              else if (rookColumnRightBlackKing == 6)
+              {
+                //king needs to go where the rook is - move rook first
+                MovePiece(SquareName(pts[rookColumnRightBlackKing].X, pts[rookColumnRightBlackKing].Y), "f8");
+                MovePiece(SquareName(pts[kingColumn].X, pts[kingColumn].Y), "g8");
+              }
+              else
+              {
+                //move king first or move order does not matter
+                MovePiece(SquareName(pts[kingColumn].X, pts[kingColumn].Y), "g8");
+                MovePiece(SquareName(pts[rookColumnRightBlackKing].X, pts[rookColumnRightBlackKing].Y), "f8");
+              }
+
+              return true;
+            }
+          }
+          else
+          {
+            //queenside
+            if (piecePositions[pts[kingColumn].X, pts[kingColumn].Y].Equals("kKing") &&
+                piecePositions[pts[rookColumnLeftBlackQueen].X, pts[rookColumnLeftBlackQueen].Y].Equals("kRook") &&
+               kCastleQ)
+            {
+              for (int i = kingColumn; i > 1; i--)
+              {
+                if (UnderAttack(SquareName(pts[i].X, pts[i].Y), !whiteMove)) return false;
+              }
+
+              for (int i = kingColumn - 1; i > 1; i--)
+              {
+                if (piecePositions[pts[i].X, pts[i].Y].Length > 0 && (i != rookColumnLeftBlackQueen)) return false;
+              }
+
+              if ((kingColumn == 3) && (rookColumnLeftBlackQueen == 2))
+              {
+                //swap positions
+                SwapPieces("c8", "d8");
+                kCastleK = kCastleQ = false;
+              }
+              else if ((kingColumn == 2) && (rookColumnLeftBlackQueen == 0))
+              {
+                //rook hops king
+                if (piecePositions[pts[3].X, pts[3].Y].Length > 0) return false;
+                if (piecePositions[pts[1].X, pts[1].Y].Length > 0) return false;
+                kCastleK = kCastleQ = false;
+                MovePiece("a8", "d8");
+              }
+              else if ((kingColumn == 2) && (rookColumnLeftBlackQueen == 1))
+              {
+                //rook hops king
+                if (piecePositions[pts[3].X, pts[3].Y].Length > 0) return false;
+                kCastleK = kCastleQ = false;
+                MovePiece("b8", "d8");
+              }
+              else if (rookColumnLeftBlackQueen == 3)
+              {
+                //king hops rook only
+                kCastleK = kCastleQ = false;
+                MovePiece(SquareName(pts[kingColumn].X, pts[kingColumn].Y), "c8");
+              }
+              else if (rookColumnLeftBlackQueen == 2)
+              {
+                //king needs to go where the rook is - move rook first
+                MovePiece(SquareName(pts[rookColumnLeftBlackQueen].X, pts[rookColumnLeftBlackQueen].Y), "d8");
+                MovePiece(SquareName(pts[kingColumn].X, pts[kingColumn].Y), "c8");
+              }
+              else
+              {
+                //move king first or move order does not matter
+                MovePiece(SquareName(pts[kingColumn].X, pts[kingColumn].Y), "c8");
+                MovePiece(SquareName(pts[rookColumnLeftBlackQueen].X, pts[rookColumnLeftBlackQueen].Y), "d8");
+              }
+
+              return true;
+            }
+          }
+        }
+      }
+      //need to check for checks && empty squares!
+      else if (whiteMove)
+      {
+        Point p1 = new Point();
+        Point p2 = new Point();
+        Point p3 = new Point();
+        Point p4 = new Point();
+        Point p5 = new Point();
+
         p1 = FindPosition("e1");
         if (pgn.Equals("O-O"))
         {
@@ -2090,6 +2498,12 @@ namespace ChessRocks
       }
       else
       {
+        Point p1 = new Point();
+        Point p2 = new Point();
+        Point p3 = new Point();
+        Point p4 = new Point();
+        Point p5 = new Point();
+
         //black move
         p1 = FindPosition("e8");
         if (pgn.Equals("O-O"))
@@ -2137,6 +2551,7 @@ namespace ChessRocks
           }
         }
       }
+      
       return false;
     }
 
@@ -2444,7 +2859,7 @@ namespace ChessRocks
 
       if (!checkQuietly && (src[1].Length > 0))
       {
-        Move moveObj = new Move(fenStart, 1);
+        Move moveObj = new Move(fenStart, 1, fenStart);
 
         if (quietList == null)
           quietList = new Chess();
@@ -2557,7 +2972,7 @@ namespace ChessRocks
 
       if (!checkQuietly && (src[1].Length > 0))
       {
-        Move moveObj = new Move(fenStart, 1);
+        Move moveObj = new Move(fenStart, 1, fenStart);
 
         if (quietList == null)
           quietList = new Chess();
@@ -2663,7 +3078,7 @@ namespace ChessRocks
 
       if (!checkQuietly && (src[1].Length > 0))
       {
-        Move moveObj = new Move(fenStart, 1);
+        Move moveObj = new Move(fenStart, 1, fenStart);
 
         if (quietList == null)
           quietList = new Chess();
@@ -2759,7 +3174,7 @@ namespace ChessRocks
       //make sure all these moves are legal
       if (!checkQuietly && (src[1].Length > 0))
       {
-        Move moveObj = new Move(fenStart, 1);
+        Move moveObj = new Move(fenStart, 1, fenStart);
 
         if (quietList == null)
           quietList = new Chess();
@@ -3103,6 +3518,7 @@ namespace ChessRocks
         if (whiteMove) MessageBox.Show("***Invalid White Move #" + fullMove.ToString() + " " + move + "\n" + currentMoveList + "\n" + sanList + "\n" + lanList);
         else MessageBox.Show("***Invalid Black Move #" + (fullMove - 1).ToString() + " " + move + "\n" + currentMoveList + "\n" + sanList + "\n" + lanList);
       }
+      validMove = false;
     }
 
     //*******************************************************************************************************
@@ -3842,6 +4258,7 @@ namespace ChessRocks
     public string fen = "";     //Forsyth-Edwards Notation resulting string after the move takes place
     public string lan = "";     //Long Algebraic Notation
     public string san = "";     //Standard Algebraic Notation
+    public string fenStart = "";//needed for 960
 
     public int nag = 0;         //Numeric Annotation Glyph
     public int fullMove;
@@ -3858,7 +4275,7 @@ namespace ChessRocks
     public readonly bool whitesMove;
     public readonly string[] padding = new string[7] { "      ", "     ", "    ", "   ", "  ", " ", "" };
 
-    //used for seving the rav lists while reading a movelist
+    //used for saving the rav lists while reading a movelist
     public string rav = "";     //Recursive Annotation Variation lists
     public bool ravExists;
 
@@ -3870,6 +4287,16 @@ namespace ChessRocks
       whitesMove = (priorFen.IndexOf(" w ") > 0);
       fullMove = FullMove;
       fen = priorFen;
+      fenStart = "";
+    }
+
+    public Move(string PriorFEN, int FullMove, string StartingFen)
+    {
+      priorFen = PriorFEN;
+      whitesMove = (priorFen.IndexOf(" w ") > 0);
+      fullMove = FullMove;
+      fen = priorFen;
+      fenStart = StartingFen;
     }
 
     //create the rav movelists
@@ -3908,7 +4335,17 @@ namespace ChessRocks
           }
         }
 
-        Chess virtualChessBoard = new Chess();
+        Chess virtualChessBoard;
+
+        if (fenStart.Length > 0)
+        {
+          virtualChessBoard = new Chess(fenStart);
+        }
+        else
+        {
+          virtualChessBoard = new Chess();
+        }
+
         ArrayList[] Moves = new ArrayList[ravArray.Count];
         main = new TreeNode[ravArray.Count];
 

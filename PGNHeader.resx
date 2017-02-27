@@ -150,9 +150,6 @@
   <data name="Termination.ToolTip" xml:space="preserve">
     <value>This takes a string that describes the reason for the conclusion of the game. While the Result tag gives the result of the game, it does not provide any extra information and so the Termination tag is defined for this purpose. </value>
   </data>
-  <data name="FEN.ToolTip" xml:space="preserve">
-    <value>This tag uses a string that gives the Forsyth-Edwards Notation for the starting position used in the game. FEN is described in a later section of this document. If a SetUp tag appears with a tag value of "1", the FEN tag pair is also required. </value>
-  </data>
   <data name="NIC.ToolTip" xml:space="preserve">
     <value>This uses a string; this is used for an opening designation from the _New in Chess_ database. This tag pair is associated with the use of the EPD opcode "nic" described in a later section of this document. </value>
   </data>
