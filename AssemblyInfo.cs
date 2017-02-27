@@ -32,5 +32,23 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
+
+[assembly: AssemblyVersion("1.2.0.0")]
+//added main menu at the top of the window
+//added browse buttons for file selection in engine text options
+//added load and save of engine options
+//fixed bug in filling the engine combobox options
+//added engine logo images
+//changed warning button test to yellow for better visibility of the text
+//fixed pagedown bug in the move list - hardcocded value removed
+//instead of having to drag and drop a piece you can now just touch it and the destination square
+//fix knight move anomaly - applies possibly to other pieces also
+//smaller (800x576) possible window size and more consistent resizing
+
+//[assembly: AssemblyVersion("1.1.0.0")]
+//lost version
+
+//[assembly: AssemblyVersion("1.0.0.0")]
+//initial release
+
 [assembly: AssemblyFileVersion("1.0.0.0")]

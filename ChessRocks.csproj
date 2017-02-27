@@ -81,6 +81,18 @@
     <Compile Include="ChessRocks.Designer.cs">
       <DependentUpon>ChessRocks.cs</DependentUpon>
     </Compile>
+    <Compile Include="About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="About.Designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GetHeader.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GetHeader.Designer.cs">
+      <DependentUpon>GetHeader.cs</DependentUpon>
+    </Compile>
     <Compile Include="GameList.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -108,11 +120,18 @@
       <DependentUpon>Promotion.cs</DependentUpon>
     </Compile>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Resources.Designer.cs" />
+    <EmbeddedResource Include="About.resx">
+      <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AmbiguousSource.resx">
       <DependentUpon>AmbiguousSource.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ChessRocks.resx">
       <DependentUpon>ChessRocks.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GetHeader.resx">
+      <DependentUpon>GetHeader.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GameList.resx">
       <DependentUpon>GameList.cs</DependentUpon>
@@ -126,6 +145,7 @@
     <EmbeddedResource Include="Promotion.resx">
       <DependentUpon>Promotion.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -161,6 +181,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cs.ico" />
+    <None Include="app.config" />
+    <None Include="uci.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

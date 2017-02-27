@@ -2800,9 +2800,16 @@ namespace ChessRocks
       if (sources[1].Length == 0)
       {
         //there is only one option so use it
-        lan_src = sources[0];
-        san_src = "";
-        return true;
+        if((lan_src.Length == 2) && !lan_src.Equals(sources[0]))
+        {
+          return false;
+        }
+        else
+        {
+          lan_src = sources[0];
+          san_src = "";
+          return true;
+        }
       }
       else
       {

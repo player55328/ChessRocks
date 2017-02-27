@@ -171,4 +171,22 @@
   <data name="SetUp.ToolTip" xml:space="preserve">
     <value>This tag takes an integer that denotes the "set-up" status of the game. A value of "0" indicates that the game has started from the usual initial array. A value of "1" indicates that the game started from a set-up position; this position is given in the "FEN" tag pair. This tag must appear for a game starting with a set-up position. If it appears with a tag value of "1", a FEN tag pair must also appear. </value>
   </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAICAQAAAABADoAgAAFgAAACgAAAAgAAAAQAAAAAEABAAAAAAAAAIAAAAAAAAAAAAAEAAAABAA
+        AAAAAAAAAACAAACAAAAAgIAAgAAAAIAAgACAgAAAgICAAMDAwAAAAP8AAP8AAAD//wD/AAAA/wD/AP//
+        AAD///8Ad3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3
+        iIh3d4iId3eIiIiId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iI
+        d3eIiHd3iIh3d4iId3d3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3
+        iIh3d4iId3eIiHd3iIh3d4iIiIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iI
+        d3eIiHd3iIh3d4iId3eIiHd3iIh3d3d3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3
+        iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIiIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iI
+        d3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3d3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3
+        iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiIiId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iI
+        d3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3eIiHd3iIh3d4iId3cAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+</value>
+  </data>
 </root>

@@ -28,6 +28,7 @@
     /// </summary>
     private void InitializeComponent()
     {
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Promotion));
       this.promoteQueen = new System.Windows.Forms.Panel();
       this.promoteRook = new System.Windows.Forms.Panel();
       this.promoteKnight = new System.Windows.Forms.Panel();
@@ -92,7 +93,9 @@
       this.Controls.Add(this.promoteKnight);
       this.Controls.Add(this.promoteRook);
       this.Controls.Add(this.promoteQueen);
+      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Name = "Promotion";
+      this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
       this.Text = "Pawn Promotion";
       this.ResumeLayout(false);
       this.PerformLayout();

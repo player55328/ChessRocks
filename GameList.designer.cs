@@ -29,14 +29,8 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GameList));
       this.gameListDataGridView = new System.Windows.Forms.DataGridView();
-      this.ok = new System.Windows.Forms.Button();
-      this.cancel = new System.Windows.Forms.Button();
-      this.clear = new System.Windows.Forms.Button();
-      this.findStr = new System.Windows.Forms.TextBox();
-      this.findString = new System.Windows.Forms.Button();
-      this.loadAllFirst = new System.Windows.Forms.Button();
-      this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       this.gameNum = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.white = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.black = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -44,6 +38,13 @@
       this.moveList = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.header = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.fen = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.ok = new System.Windows.Forms.Button();
+      this.cancel = new System.Windows.Forms.Button();
+      this.clear = new System.Windows.Forms.Button();
+      this.findStr = new System.Windows.Forms.TextBox();
+      this.findString = new System.Windows.Forms.Button();
+      this.loadAllFirst = new System.Windows.Forms.Button();
+      this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.gameListDataGridView)).BeginInit();
       this.SuspendLayout();
       // 
@@ -67,6 +68,59 @@
       this.gameListDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
       this.gameListDataGridView.Size = new System.Drawing.Size(852, 658);
       this.gameListDataGridView.TabIndex = 0;
+      // 
+      // gameNum
+      // 
+      this.gameNum.Frozen = true;
+      this.gameNum.HeaderText = "Game";
+      this.gameNum.Name = "gameNum";
+      this.gameNum.ReadOnly = true;
+      this.gameNum.Width = 60;
+      // 
+      // white
+      // 
+      this.white.Frozen = true;
+      this.white.HeaderText = "White";
+      this.white.Name = "white";
+      this.white.ReadOnly = true;
+      this.white.Width = 60;
+      // 
+      // black
+      // 
+      this.black.Frozen = true;
+      this.black.HeaderText = "Black";
+      this.black.Name = "black";
+      this.black.ReadOnly = true;
+      this.black.Width = 59;
+      // 
+      // result
+      // 
+      this.result.Frozen = true;
+      this.result.HeaderText = "Result";
+      this.result.Name = "result";
+      this.result.ReadOnly = true;
+      this.result.Width = 62;
+      // 
+      // moveList
+      // 
+      this.moveList.HeaderText = "Move List";
+      this.moveList.Name = "moveList";
+      this.moveList.ReadOnly = true;
+      this.moveList.Width = 78;
+      // 
+      // header
+      // 
+      this.header.HeaderText = "Header";
+      this.header.Name = "header";
+      this.header.ReadOnly = true;
+      this.header.Width = 67;
+      // 
+      // fen
+      // 
+      this.fen.HeaderText = "FEN";
+      this.fen.Name = "fen";
+      this.fen.ReadOnly = true;
+      this.fen.Width = 53;
       // 
       // ok
       // 
@@ -133,59 +187,6 @@
       this.loadAllFirst.UseVisualStyleBackColor = true;
       this.loadAllFirst.Click += new System.EventHandler(this.loadAllFirst_Click);
       // 
-      // gameNum
-      // 
-      this.gameNum.Frozen = true;
-      this.gameNum.HeaderText = "Game";
-      this.gameNum.Name = "gameNum";
-      this.gameNum.ReadOnly = true;
-      this.gameNum.Width = 60;
-      // 
-      // white
-      // 
-      this.white.Frozen = true;
-      this.white.HeaderText = "White";
-      this.white.Name = "white";
-      this.white.ReadOnly = true;
-      this.white.Width = 60;
-      // 
-      // black
-      // 
-      this.black.Frozen = true;
-      this.black.HeaderText = "Black";
-      this.black.Name = "black";
-      this.black.ReadOnly = true;
-      this.black.Width = 59;
-      // 
-      // result
-      // 
-      this.result.Frozen = true;
-      this.result.HeaderText = "Result";
-      this.result.Name = "result";
-      this.result.ReadOnly = true;
-      this.result.Width = 62;
-      // 
-      // moveList
-      // 
-      this.moveList.HeaderText = "Move List";
-      this.moveList.Name = "moveList";
-      this.moveList.ReadOnly = true;
-      this.moveList.Width = 78;
-      // 
-      // header
-      // 
-      this.header.HeaderText = "Header";
-      this.header.Name = "header";
-      this.header.ReadOnly = true;
-      this.header.Width = 67;
-      // 
-      // fen
-      // 
-      this.fen.HeaderText = "FEN";
-      this.fen.Name = "fen";
-      this.fen.ReadOnly = true;
-      this.fen.Width = 53;
-      // 
       // GameList
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -198,7 +199,9 @@
       this.Controls.Add(this.cancel);
       this.Controls.Add(this.ok);
       this.Controls.Add(this.gameListDataGridView);
+      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Name = "GameList";
+      this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
       this.Text = "Game List - Select the game to put on the board...";
       ((System.ComponentModel.ISupportInitialize)(this.gameListDataGridView)).EndInit();
       this.ResumeLayout(false);
